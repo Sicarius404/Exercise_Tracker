@@ -1,0 +1,18 @@
+# Node.js
+node_modules/
+.env
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Editor
+.vscode/
+
+# Application specific
+userinput.py
+architecture/

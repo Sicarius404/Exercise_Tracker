@@ -1,5 +1,26 @@
+<<<<<<< HEAD
 node_modules
 # Keep environment variables out of version control
 .env
 
 /generated/prisma
+=======
+# Node.js
+node_modules/
+.env
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Editor
+.vscode/
+
+# Application specific
+userinput.py
+architecture/
+>>>>>>> 1569eee614bc434ff3e4bb784b2ab5e07241976d

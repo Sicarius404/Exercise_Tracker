@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  runs      Run[]
+  runPlans  RunPlan[]
+  gymPlans  GymPlan[]
+}
+
+model Run {
+  id         Int      @id @default(autoincrement())
+  stravaId   String?  @unique
+  date       DateTime
+  distance   Float
+  duration   Float
+  pace       Float
+  notes      String?
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  completedRunPlan RunPlan?
+}
+
+model RunPlan {
+  id              Int      @id @default(autoincrement())
+  week            Int
+  day             Int
+  type            String
+  plannedTime     Float?
+  plannedDistance Float?
+  completedRun    Run?     @relation(fields: [completedRunId], references: [id])
+  completedRunId  Int?     @unique // Link to the Run that completed this plan
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+}
+
+model GymPlan {
+  id          Int        @id @default(autoincrement())
+  week        Int
+  day         Int
+  muscleGroup String
+  exercises   Exercise[]
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+model Exercise {
+  id        Int     @id @default(autoincrement())
+  gymPlanId Int
+  name      String
+  sets      Int
+  reps      Int
+  weight    Float
+  completed CompletedExercise[]
+  gymPlan   GymPlan @relation(fields: [gymPlanId], references: [id])
+}
+
+model CompletedExercise {
+  id          Int     @id @default(autoincrement())
+  exerciseId  Int
+  actualSets  Int
+  actualReps  Int
+  actualWeight Float
+  notes       String?
+  createdAt   DateTime @default(now())
+  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+}

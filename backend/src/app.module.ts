@@ -1,0 +1,25 @@
+import { AuthModule } from "./auth/auth.module";
+import { RunsModule } from "./runs/runs.module";
+import { GymPlansModule } from "./gym-plans/gym-plans.module";
+import { StatsModule } from "./stats/stats.module";
+import { StravaModule } from "./strava/strava.module";
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { PrismaModule } from "./database/prisma.module";
+import { RunPlansModule } from "./run-plans/run-plans.module";
+
+@Module({
+  imports: [
+    AuthModule,
+    RunsModule,
+    GymPlansModule,
+    StatsModule,
+    StravaModule,
+    PrismaModule,
+    RunPlansModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}

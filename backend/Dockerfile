@@ -1,18 +1,35 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.7
 
-FROM golang:1.25-alpine AS build
+FROM node:20-alpine AS deps
 WORKDIR /app
-COPY go.mod ./
-RUN go mod download
-COPY . .
-RUN go mod tidy && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server ./
+COPY package.json package-lock.json ./
+RUN npm ci
 
-FROM gcr.io/distroless/base-debian12:nonroot
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY --from=build /app/server /app/server
-ENV PORT=8080
-EXPOSE 8080
-USER nonroot:nonroot
-ENTRYPOINT ["/app/server"]
+RUN apk add --no-cache openssl
+COPY package.json package-lock.json nest-cli.json tsconfig*.json ./
+COPY prisma ./prisma
+COPY src ./src
 
+# Generate Prisma client
+RUN npx prisma generate
+
+# Build the application
+RUN npm run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production \
+    PORT=3000
+RUN apk add --no-cache openssl
+COPY package.json package-lock.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+RUN npm ci --omit=dev && npm cache clean --force
+RUN npx prisma generate
+RUN chown -R node:node /app
+USER node
+EXPOSE 3000
+CMD ["node", "dist/main.js"]
 

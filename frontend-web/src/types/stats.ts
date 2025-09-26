@@ -35,3 +35,11 @@ export interface DashboardResponse {
   readonly personalRecords: PersonalRecords;
   readonly calendarView: CalendarView;
 }
+
+export interface MonthlyStats {
+  readonly totalRuns: number;
+  readonly totalDistance: number;
+  readonly totalGymSessions: number;
+  readonly totalWeightLifted: number;
+  readonly averagePace: number;
+}

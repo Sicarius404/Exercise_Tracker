@@ -1,3 +1,0 @@
-- [ ] Phase 2: Implement weekly mileage and lifting volume stats
-- [ ] Phase 2: Implement PR tracking for runs and lifts
-- [ ] Phase 2: Implement calendar view for workouts

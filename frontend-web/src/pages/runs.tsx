@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -49,12 +50,12 @@ export default function RunsPage() {
         <section className="space-y-6">
           <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-white">Runs</h1>
+              <h1 className="text-3xl font-semibold text-white">Runs</h1>
               <p className="text-sm text-zinc-400">
                 Track your past runs and analyze performance trends.
               </p>
             </div>
-            <div className="flex gap-3 items-center">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
               <div className="flex gap-2 text-xs">
                 {filterOptions.map((option) => (
                   <button
@@ -63,7 +64,7 @@ export default function RunsPage() {
                     onClick={() => setFilter(option.value)}
                     className={`rounded-full border border-zinc-700 px-4 py-2 transition ${
                       filter === option.value
-                        ? "bg-white text-zinc-900"
+                        ? "bg-white text-zinc-900 shadow"
                         : "bg-zinc-900 text-zinc-300 hover:border-white"
                     }`}
                   >
@@ -78,6 +79,9 @@ export default function RunsPage() {
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle>Add New Run</DialogTitle>
+                    <DialogDescription>
+                      Capture pace, distance, and how you felt after finishing.
+                    </DialogDescription>
                   </DialogHeader>
                   <RunForm
                     onSuccess={handleRunSaved}
@@ -102,8 +106,8 @@ export default function RunsPage() {
             </p>
           )}
 
-          <div className="overflow-hidden rounded-lg border border-zinc-800">
-            <table className="min-w-full divide-y divide-zinc-800">
+          <div className="overflow-hidden rounded-2xl border border-zinc-900/60 bg-zinc-950/60">
+            <table className="min-w-full divide-y divide-zinc-900">
               <thead className="bg-zinc-900/60 text-xs uppercase tracking-wide text-zinc-500">
                 <tr>
                   <th className="px-4 py-3 text-left">Date</th>
@@ -113,7 +117,7 @@ export default function RunsPage() {
                   <th className="px-4 py-3 text-left">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800 text-sm text-zinc-300">
+              <tbody className="divide-y divide-zinc-900 text-sm text-zinc-300">
                 {filteredRuns.map((run) => (
                   <RunRow key={run.id} run={run} />
                 ))}

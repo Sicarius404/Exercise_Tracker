@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { apiClient } from "@/lib/api-client";
+import { useCreateRun } from "@/lib/query-hooks";
 import { useAuthStore } from "@/lib/auth-store";
 
 interface RunFormProps {
@@ -19,6 +19,7 @@ export function RunForm({ onSuccess, onCancel }: RunFormProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const createRun = useCreateRun();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ export function RunForm({ onSuccess, onCancel }: RunFormProps) {
     setError("");
 
     try {
-      await apiClient.post("/runs", {
+      await createRun.mutateAsync({
         date: formData.date,
         distance: parseFloat(formData.distance),
         duration: parseFloat(formData.duration),
@@ -38,8 +39,12 @@ export function RunForm({ onSuccess, onCancel }: RunFormProps) {
       });
 
       onSuccess?.();
-    } catch {
-      setError("Failed to save run");
+    } catch (mutationError) {
+      setError(
+        mutationError instanceof Error
+          ? mutationError.message
+          : "Failed to save run"
+      );
     } finally {
       setIsSubmitting(false);
     }

@@ -11,12 +11,12 @@ export class StatsController {
     @Query("weekStart") weekStart?: string
   ) {
     const weekStartDate = weekStart ? new Date(weekStart) : undefined;
-    return this.statsService.getWeeklyStats(parseInt(userId), weekStartDate);
+    return this.statsService.getWeeklyStats(userId, weekStartDate);
   }
 
   @Get("personal-records")
   async getPersonalRecords(@Query("userId") userId: string) {
-    return this.statsService.getPersonalRecords(parseInt(userId));
+    return this.statsService.getPersonalRecords(userId);
   }
 
   @Get("calendar")
@@ -26,7 +26,7 @@ export class StatsController {
     @Query("year") year?: string
   ) {
     return this.statsService.getCalendarView(
-      parseInt(userId),
+      userId,
       month ? parseInt(month) : undefined,
       year ? parseInt(year) : undefined
     );
@@ -39,7 +39,7 @@ export class StatsController {
     @Query("year") year: string
   ) {
     return this.statsService.getMonthlySummary(
-      parseInt(userId),
+      userId,
       parseInt(month),
       parseInt(year)
     );
@@ -48,9 +48,9 @@ export class StatsController {
   @Get("dashboard")
   async getDashboardData(@Query("userId") userId: string) {
     const [weeklyStats, personalRecords, calendarView] = await Promise.all([
-      this.statsService.getWeeklyStats(parseInt(userId)),
-      this.statsService.getPersonalRecords(parseInt(userId)),
-      this.statsService.getCalendarView(parseInt(userId)),
+      this.statsService.getWeeklyStats(userId),
+      this.statsService.getPersonalRecords(userId),
+      this.statsService.getCalendarView(userId),
     ]);
 
     return {
@@ -60,4 +60,3 @@ export class StatsController {
     };
   }
 }
-

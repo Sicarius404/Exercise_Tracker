@@ -13,22 +13,22 @@ export class RunsService {
     duration: number;
     pace: number;
     notes?: string;
-    userId: number;
+    userId: string;
   }): Promise<Run> {
     return this.prisma.run.create({ data: runData });
   }
 
-  async findAll(userId: number): Promise<Run[]> {
+  async findAll(userId: string): Promise<Run[]> {
     return this.prisma.run.findMany({ where: { userId } });
   }
 
-  async findOne(id: number, userId: number): Promise<Run | null> {
+  async findOne(id: number, userId: string): Promise<Run | null> {
     return this.prisma.run.findUnique({ where: { id, userId } });
   }
 
   async update(
     id: number,
-    userId: number,
+    userId: string,
     updateData: Partial<{
       stravaId: string;
       date: Date;
@@ -53,7 +53,7 @@ export class RunsService {
     });
   }
 
-  async remove(id: number, userId: number): Promise<boolean> {
+  async remove(id: number, userId: string): Promise<boolean> {
     // First, verify the run exists and belongs to the user
     const existingRun = await this.prisma.run.findUnique({
       where: { id, userId },

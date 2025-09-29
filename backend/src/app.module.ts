@@ -8,6 +8,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./database/prisma.module";
 import { RunPlansModule } from "./run-plans/run-plans.module";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -18,6 +19,9 @@ import { RunPlansModule } from "./run-plans/run-plans.module";
     StravaModule,
     PrismaModule,
     RunPlansModule,
+    ConfigModule.forRoot({
+      isGlobal: true, // makes .env available everywhere
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

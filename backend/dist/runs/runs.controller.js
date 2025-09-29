@@ -27,20 +27,20 @@ let RunsController = class RunsController {
         return this.runsService.create(runData);
     }
     async findAll(userId) {
-        return this.runsService.findAll(parseInt(userId));
+        return this.runsService.findAll(userId);
     }
     async findOne(id, userId) {
-        return this.runsService.findOne(parseInt(id), parseInt(userId));
+        return this.runsService.findOne(parseInt(id), userId);
     }
     async update(id, userId, updateRunDto) {
         const updateData = {
             ...updateRunDto,
             ...(updateRunDto.date && { date: new Date(updateRunDto.date) }),
         };
-        return this.runsService.update(parseInt(id), parseInt(userId), updateData);
+        return this.runsService.update(parseInt(id), userId, updateData);
     }
     async remove(id, userId) {
-        return this.runsService.remove(parseInt(id), parseInt(userId));
+        return this.runsService.remove(parseInt(id), userId);
     }
     async findByStravaId(stravaId) {
         return this.runsService.findByStravaId(stravaId);

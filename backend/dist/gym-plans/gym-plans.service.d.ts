@@ -18,19 +18,19 @@ export declare class GymPlansService {
         day: number;
         muscleGroup: string;
         exercises: Omit<Exercise, "id" | "gymPlanId">[];
-        userId: number;
+        userId: string;
     }): Promise<GymPlan>;
-    findAll(userId: number): Promise<GymPlanWithExercises[]>;
-    findOne(id: number, userId: number): Promise<GymPlanWithExercises | null>;
-    update(id: number, userId: number, updateData: Partial<{
+    findAll(userId: string): Promise<GymPlanWithExercises[]>;
+    findOne(id: number, userId: string): Promise<GymPlanWithExercises | null>;
+    update(id: number, userId: string, updateData: Partial<{
         week: number;
         day: number;
         muscleGroup: string;
     }>): Promise<GymPlan | null>;
-    remove(id: number, userId: number): Promise<boolean>;
-    addExercise(gymPlanId: number, userId: number, exerciseData: Omit<Exercise, "id" | "gymPlanId">): Promise<Exercise | null>;
-    updateExercise(exerciseId: number, userId: number, updateData: Partial<Omit<Exercise, "id" | "gymPlanId">>): Promise<Exercise | null>;
-    removeExercise(exerciseId: number, userId: number): Promise<boolean>;
-    completeExercise(exerciseId: number, userId: number, completedData: Omit<CompletedExercise, "id" | "exerciseId">): Promise<CompletedExercise | null>;
+    remove(id: number, userId: string): Promise<boolean>;
+    addExercise(gymPlanId: number, userId: string, exerciseData: Omit<Exercise, "id" | "gymPlanId">): Promise<Exercise | null>;
+    updateExercise(exerciseId: number, userId: string, updateData: Partial<Omit<Exercise, "id" | "gymPlanId">>): Promise<Exercise | null>;
+    removeExercise(exerciseId: number, userId: string): Promise<boolean>;
+    completeExercise(exerciseId: number, userId: string, completedData: Omit<CompletedExercise, "id" | "exerciseId">): Promise<CompletedExercise | null>;
 }
 export {};

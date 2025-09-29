@@ -12,22 +12,22 @@ export class RunPlansService {
     type: string;
     plannedTime?: number;
     plannedDistance?: number;
-    userId: number;
+    userId: string;
   }): Promise<RunPlan> {
     return this.prisma.runPlan.create({ data: runPlanData });
   }
 
-  async findAll(userId: number): Promise<RunPlan[]> {
+  async findAll(userId: string): Promise<RunPlan[]> {
     return this.prisma.runPlan.findMany({ where: { userId } });
   }
 
-  async findOne(id: number, userId: number): Promise<RunPlan | null> {
+  async findOne(id: number, userId: string): Promise<RunPlan | null> {
     return this.prisma.runPlan.findUnique({ where: { id, userId } });
   }
 
   async update(
     id: number,
-    userId: number,
+    userId: string,
     updateData: Partial<{
       week: number;
       day: number;
@@ -51,7 +51,7 @@ export class RunPlansService {
     });
   }
 
-  async remove(id: number, userId: number): Promise<boolean> {
+  async remove(id: number, userId: string): Promise<boolean> {
     const existingRunPlan = await this.prisma.runPlan.findUnique({
       where: { id, userId },
     });

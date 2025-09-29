@@ -70,7 +70,7 @@ export class StravaController {
   }
 
   @Post("import-runs")
-  async importRuns(@Body() body: { accessToken: string; userId: number }) {
+  async importRuns(@Body() body: { accessToken: string; userId: string }) {
     try {
       const activities = await this.stravaService.getActivities(
         body.accessToken

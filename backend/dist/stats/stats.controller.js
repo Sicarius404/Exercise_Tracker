@@ -21,22 +21,22 @@ let StatsController = class StatsController {
     }
     async getWeeklyStats(userId, weekStart) {
         const weekStartDate = weekStart ? new Date(weekStart) : undefined;
-        return this.statsService.getWeeklyStats(parseInt(userId), weekStartDate);
+        return this.statsService.getWeeklyStats(userId, weekStartDate);
     }
     async getPersonalRecords(userId) {
-        return this.statsService.getPersonalRecords(parseInt(userId));
+        return this.statsService.getPersonalRecords(userId);
     }
     async getCalendarView(userId, month, year) {
-        return this.statsService.getCalendarView(parseInt(userId), month ? parseInt(month) : undefined, year ? parseInt(year) : undefined);
+        return this.statsService.getCalendarView(userId, month ? parseInt(month) : undefined, year ? parseInt(year) : undefined);
     }
     async getMonthlySummary(userId, month, year) {
-        return this.statsService.getMonthlySummary(parseInt(userId), parseInt(month), parseInt(year));
+        return this.statsService.getMonthlySummary(userId, parseInt(month), parseInt(year));
     }
     async getDashboardData(userId) {
         const [weeklyStats, personalRecords, calendarView] = await Promise.all([
-            this.statsService.getWeeklyStats(parseInt(userId)),
-            this.statsService.getPersonalRecords(parseInt(userId)),
-            this.statsService.getCalendarView(parseInt(userId)),
+            this.statsService.getWeeklyStats(userId),
+            this.statsService.getPersonalRecords(userId),
+            this.statsService.getCalendarView(userId),
         ]);
         return {
             weeklyStats,

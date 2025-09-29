@@ -4,20 +4,20 @@ export declare class GymPlansController {
     constructor(gymPlansService: GymPlansService);
     create(createGymPlanDto: any, req: any): Promise<{
         id: number;
-        userId: number;
         week: number;
         day: number;
         muscleGroup: string;
+        userId: string;
     }>;
     findAll(req: any): Promise<({
         exercises: ({
             completed: {
                 id: number;
-                notes: string | null;
                 exerciseId: number;
                 actualSets: number;
                 actualReps: number;
                 actualWeight: number;
+                notes: string | null;
                 createdAt: Date;
             }[];
         } & {
@@ -30,20 +30,20 @@ export declare class GymPlansController {
         })[];
     } & {
         id: number;
-        userId: number;
         week: number;
         day: number;
         muscleGroup: string;
+        userId: string;
     })[]>;
     findOne(id: string, req: any): Promise<{
         exercises: ({
             completed: {
                 id: number;
-                notes: string | null;
                 exerciseId: number;
                 actualSets: number;
                 actualReps: number;
                 actualWeight: number;
+                notes: string | null;
                 createdAt: Date;
             }[];
         } & {
@@ -56,17 +56,17 @@ export declare class GymPlansController {
         })[];
     } & {
         id: number;
-        userId: number;
         week: number;
         day: number;
         muscleGroup: string;
+        userId: string;
     }>;
     update(id: string, updateGymPlanDto: any, req: any): Promise<{
         id: number;
-        userId: number;
         week: number;
         day: number;
         muscleGroup: string;
+        userId: string;
     }>;
     remove(id: string, req: any): Promise<boolean>;
     addExercise(gymPlanId: string, exerciseData: any, req: any): Promise<{
@@ -88,11 +88,11 @@ export declare class GymPlansController {
     removeExercise(exerciseId: string, req: any): Promise<boolean>;
     completeExercise(exerciseId: string, completedData: any, req: any): Promise<{
         id: number;
-        notes: string | null;
         exerciseId: number;
         actualSets: number;
         actualReps: number;
         actualWeight: number;
+        notes: string | null;
         createdAt: Date;
     }>;
 }

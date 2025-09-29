@@ -3025,6 +3025,12 @@ export declare const auth: {
     }>;
     options: {
         database: (options: import("better-auth").BetterAuthOptions) => import("better-auth").Adapter;
+        emailAndPassword: {
+            enabled: true;
+        };
+        jwt: {
+            enabled: boolean;
+        };
     };
     $context: Promise<import("better-auth").AuthContext>;
     $Infer: {
@@ -3051,29 +3057,30 @@ export declare const auth: {
         };
     };
     $ERROR_CODES: {
-        USER_NOT_FOUND: string;
-        FAILED_TO_CREATE_USER: string;
-        FAILED_TO_CREATE_SESSION: string;
-        FAILED_TO_UPDATE_USER: string;
-        FAILED_TO_GET_SESSION: string;
-        INVALID_PASSWORD: string;
-        INVALID_EMAIL: string;
-        INVALID_EMAIL_OR_PASSWORD: string;
-        SOCIAL_ACCOUNT_ALREADY_LINKED: string;
-        PROVIDER_NOT_FOUND: string;
-        INVALID_TOKEN: string;
-        ID_TOKEN_NOT_SUPPORTED: string;
-        FAILED_TO_GET_USER_INFO: string;
-        USER_EMAIL_NOT_FOUND: string;
-        EMAIL_NOT_VERIFIED: string;
-        PASSWORD_TOO_SHORT: string;
-        PASSWORD_TOO_LONG: string;
-        USER_ALREADY_EXISTS: string;
-        EMAIL_CAN_NOT_BE_UPDATED: string;
-        CREDENTIAL_ACCOUNT_NOT_FOUND: string;
-        SESSION_EXPIRED: string;
-        FAILED_TO_UNLINK_LAST_ACCOUNT: string;
-        ACCOUNT_NOT_FOUND: string;
-        USER_ALREADY_HAS_PASSWORD: string;
+        readonly USER_NOT_FOUND: "User not found";
+        readonly FAILED_TO_CREATE_USER: "Failed to create user";
+        readonly FAILED_TO_CREATE_SESSION: "Failed to create session";
+        readonly FAILED_TO_UPDATE_USER: "Failed to update user";
+        readonly FAILED_TO_GET_SESSION: "Failed to get session";
+        readonly INVALID_PASSWORD: "Invalid password";
+        readonly INVALID_EMAIL: "Invalid email";
+        readonly INVALID_EMAIL_OR_PASSWORD: "Invalid email or password";
+        readonly SOCIAL_ACCOUNT_ALREADY_LINKED: "Social account already linked";
+        readonly PROVIDER_NOT_FOUND: "Provider not found";
+        readonly INVALID_TOKEN: "Invalid token";
+        readonly ID_TOKEN_NOT_SUPPORTED: "id_token not supported";
+        readonly FAILED_TO_GET_USER_INFO: "Failed to get user info";
+        readonly USER_EMAIL_NOT_FOUND: "User email not found";
+        readonly EMAIL_NOT_VERIFIED: "Email not verified";
+        readonly PASSWORD_TOO_SHORT: "Password too short";
+        readonly PASSWORD_TOO_LONG: "Password too long";
+        readonly USER_ALREADY_EXISTS: "User already exists.";
+        readonly USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL: "User already exists. Use another email.";
+        readonly EMAIL_CAN_NOT_BE_UPDATED: "Email can not be updated";
+        readonly CREDENTIAL_ACCOUNT_NOT_FOUND: "Credential account not found";
+        readonly SESSION_EXPIRED: "Session expired. Re-authenticate to perform this action.";
+        readonly FAILED_TO_UNLINK_LAST_ACCOUNT: "You can't unlink your last account";
+        readonly ACCOUNT_NOT_FOUND: "Account not found";
+        readonly USER_ALREADY_HAS_PASSWORD: "User already has a password. Provide that to delete the account.";
     };
 };

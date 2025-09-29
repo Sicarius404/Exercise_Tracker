@@ -7,5 +7,11 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 exports.auth = (0, better_auth_1.betterAuth)({
     database: (0, prisma_1.prismaAdapter)(prisma, { provider: "postgresql" }),
+    emailAndPassword: {
+        enabled: true,
+    },
+    jwt: {
+        enabled: true,
+    },
 });
 //# sourceMappingURL=auth.js.map

@@ -7,7 +7,7 @@ interface Run {
     duration: number;
     pace: number;
     notes?: string;
-    userId: number;
+    userId: string;
 }
 export declare class RunsController {
     private readonly runsService;
@@ -19,7 +19,7 @@ export declare class RunsController {
         duration: number;
         pace: number;
         notes?: string;
-        userId: number;
+        userId: string;
     }): Promise<Run>;
     findAll(userId: string): Promise<Run[]>;
     findOne(id: string, userId: string): Promise<Run | undefined>;

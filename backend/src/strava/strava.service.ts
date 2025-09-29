@@ -182,7 +182,7 @@ export class StravaService {
   }
 
   async importStravaActivities(
-    userId: number,
+    userId: string,
     accessToken: string
   ): Promise<void> {
     try {
@@ -206,7 +206,7 @@ export class StravaService {
     }
   }
 
-  convertStravaActivityToRun(stravaActivity: StravaActivity, userId: number) {
+  convertStravaActivityToRun(stravaActivity: StravaActivity, userId: string) {
     // Convert meters to kilometers
     const distance = stravaActivity.distance / 1000;
 

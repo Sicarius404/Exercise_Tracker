@@ -6,14 +6,14 @@ export declare class StatsService {
     private readonly runsService;
     private readonly gymPlansService;
     constructor(prisma: PrismaService, runsService: RunsService, gymPlansService: GymPlansService);
-    getWeeklyStats(userId: number, weekStart?: Date): Promise<{
+    getWeeklyStats(userId: string, weekStart?: Date): Promise<{
         totalMileage: number;
         averagePace: number;
         totalWeightLifted: number;
         runCount: number;
         completedExercises: number;
     }>;
-    getPersonalRecords(userId: number): Promise<{
+    getPersonalRecords(userId: string): Promise<{
         fastest5k: number | null;
         fastest10k: number | null;
         fastestMarathon: number | null;
@@ -21,11 +21,11 @@ export declare class StatsService {
         heaviestBench: number | null;
         heaviestDeadlift: number | null;
     }>;
-    getCalendarView(userId: number, month?: number, year?: number): Promise<{
+    getCalendarView(userId: string, month?: number, year?: number): Promise<{
         plannedWorkouts: any[];
         completedWorkouts: any[];
     }>;
-    getMonthlySummary(userId: number, month: number, year: number): Promise<{
+    getMonthlySummary(userId: string, month: number, year: number): Promise<{
         totalRuns: number;
         totalDistance: number;
         totalGymSessions: number;

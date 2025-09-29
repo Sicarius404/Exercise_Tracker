@@ -10,11 +10,11 @@ export declare class RunsService {
         duration: number;
         pace: number;
         notes?: string;
-        userId: number;
+        userId: string;
     }): Promise<Run>;
-    findAll(userId: number): Promise<Run[]>;
-    findOne(id: number, userId: number): Promise<Run | null>;
-    update(id: number, userId: number, updateData: Partial<{
+    findAll(userId: string): Promise<Run[]>;
+    findOne(id: number, userId: string): Promise<Run | null>;
+    update(id: number, userId: string, updateData: Partial<{
         stravaId: string;
         date: Date;
         distance: number;
@@ -22,6 +22,6 @@ export declare class RunsService {
         pace: number;
         notes: string;
     }>): Promise<Run | null>;
-    remove(id: number, userId: number): Promise<boolean>;
+    remove(id: number, userId: string): Promise<boolean>;
     findByStravaId(stravaId: string): Promise<Run | null>;
 }

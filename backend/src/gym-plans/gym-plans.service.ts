@@ -19,7 +19,7 @@ export class GymPlansService {
     day: number;
     muscleGroup: string;
     exercises: Omit<Exercise, "id" | "gymPlanId">[];
-    userId: number;
+    userId: string;
   }): Promise<GymPlan> {
     return this.prisma.gymPlan.create({
       data: {
@@ -34,7 +34,7 @@ export class GymPlansService {
     });
   }
 
-  async findAll(userId: number): Promise<GymPlanWithExercises[]> {
+  async findAll(userId: string): Promise<GymPlanWithExercises[]> {
     return this.prisma.gymPlan.findMany({
       where: { userId },
       include: { exercises: { include: { completed: true } } },
@@ -43,7 +43,7 @@ export class GymPlansService {
 
   async findOne(
     id: number,
-    userId: number
+    userId: string
   ): Promise<GymPlanWithExercises | null> {
     return this.prisma.gymPlan.findUnique({
       where: { id, userId },
@@ -53,7 +53,7 @@ export class GymPlansService {
 
   async update(
     id: number,
-    userId: number,
+    userId: string,
     updateData: Partial<{
       week: number;
       day: number;
@@ -72,7 +72,7 @@ export class GymPlansService {
     });
   }
 
-  async remove(id: number, userId: number): Promise<boolean> {
+  async remove(id: number, userId: string): Promise<boolean> {
     const existingPlan = await this.prisma.gymPlan.findUnique({
       where: { id, userId },
     });
@@ -85,7 +85,7 @@ export class GymPlansService {
 
   async addExercise(
     gymPlanId: number,
-    userId: number,
+    userId: string,
     exerciseData: Omit<Exercise, "id" | "gymPlanId">
   ): Promise<Exercise | null> {
     const plan = await this.prisma.gymPlan.findUnique({
@@ -101,7 +101,7 @@ export class GymPlansService {
 
   async updateExercise(
     exerciseId: number,
-    userId: number,
+    userId: string,
     updateData: Partial<Omit<Exercise, "id" | "gymPlanId">>
   ): Promise<Exercise | null> {
     const exercise = await this.prisma.exercise.findUnique({
@@ -117,7 +117,7 @@ export class GymPlansService {
     });
   }
 
-  async removeExercise(exerciseId: number, userId: number): Promise<boolean> {
+  async removeExercise(exerciseId: number, userId: string): Promise<boolean> {
     const exercise = await this.prisma.exercise.findUnique({
       where: { id: exerciseId },
       include: { gymPlan: true },
@@ -131,7 +131,7 @@ export class GymPlansService {
 
   async completeExercise(
     exerciseId: number,
-    userId: number,
+    userId: string,
     completedData: Omit<CompletedExercise, "id" | "exerciseId">
   ): Promise<CompletedExercise | null> {
     const exercise = await this.prisma.exercise.findUnique({

@@ -36,7 +36,7 @@ export declare class StravaController {
     }>;
     importRuns(body: {
         accessToken: string;
-        userId: number;
+        userId: string;
     }): Promise<{
         message: string;
         runs: {
@@ -46,7 +46,7 @@ export declare class StravaController {
             duration: number;
             pace: number;
             notes: string;
-            userId: number;
+            userId: string;
         }[];
         error?: undefined;
         details?: undefined;

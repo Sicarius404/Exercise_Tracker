@@ -21,6 +21,7 @@ let StatsService = class StatsService {
         this.gymPlansService = gymPlansService;
     }
     async getWeeklyStats(userId, weekStart) {
+        var weekStart = weekStart ?? new Date();
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekStart.getDate() + 7);
         const userRuns = await this.runsService.findAll(userId);

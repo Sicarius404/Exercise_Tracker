@@ -33,15 +33,15 @@ export declare class StravaService {
     getActivities(accessToken: string, perPage?: number, page?: number): Promise<StravaActivity[]>;
     getActivity(accessToken: string, activityId: string): Promise<StravaActivity>;
     getAthlete(accessToken: string): Promise<any>;
-    importStravaActivities(userId: number, accessToken: string): Promise<void>;
-    convertStravaActivityToRun(stravaActivity: StravaActivity, userId: number): {
+    importStravaActivities(userId: string, accessToken: string): Promise<void>;
+    convertStravaActivityToRun(stravaActivity: StravaActivity, userId: string): {
         stravaId: string;
         date: Date;
         distance: number;
         duration: number;
         pace: number;
         notes: string;
-        userId: number;
+        userId: string;
     };
     getAuthorizationUrl(): string;
 }

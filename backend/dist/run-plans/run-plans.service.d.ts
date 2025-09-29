@@ -9,11 +9,11 @@ export declare class RunPlansService {
         type: string;
         plannedTime?: number;
         plannedDistance?: number;
-        userId: number;
+        userId: string;
     }): Promise<RunPlan>;
-    findAll(userId: number): Promise<RunPlan[]>;
-    findOne(id: number, userId: number): Promise<RunPlan | null>;
-    update(id: number, userId: number, updateData: Partial<{
+    findAll(userId: string): Promise<RunPlan[]>;
+    findOne(id: number, userId: string): Promise<RunPlan | null>;
+    update(id: number, userId: string, updateData: Partial<{
         week: number;
         day: number;
         type: string;
@@ -21,5 +21,5 @@ export declare class RunPlansService {
         plannedDistance: number;
         completedRunId: number;
     }>): Promise<RunPlan | null>;
-    remove(id: number, userId: number): Promise<boolean>;
+    remove(id: number, userId: string): Promise<boolean>;
 }

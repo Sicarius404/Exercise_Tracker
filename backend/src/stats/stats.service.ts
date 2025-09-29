@@ -12,7 +12,7 @@ export class StatsService {
   ) {}
 
   async getWeeklyStats(
-    userId: number,
+    userId: string,
     weekStart?: Date
   ): Promise<{
     totalMileage: number;
@@ -21,6 +21,7 @@ export class StatsService {
     runCount: number;
     completedExercises: number;
   }> {
+    var weekStart = weekStart ?? new Date();
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekStart.getDate() + 7);
 
@@ -74,7 +75,7 @@ export class StatsService {
     };
   }
 
-  async getPersonalRecords(userId: number): Promise<{
+  async getPersonalRecords(userId: string): Promise<{
     fastest5k: number | null;
     fastest10k: number | null;
     fastestMarathon: number | null;
@@ -150,7 +151,7 @@ export class StatsService {
   }
 
   async getCalendarView(
-    userId: number,
+    userId: string,
     month?: number,
     year?: number
   ): Promise<{
@@ -229,7 +230,7 @@ export class StatsService {
   }
 
   async getMonthlySummary(
-    userId: number,
+    userId: string,
     month: number,
     year: number
   ): Promise<{

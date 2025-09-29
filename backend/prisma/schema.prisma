@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,38 +9,47 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  runs      Run[]
-  runPlans  RunPlan[]
-  gymPlans  GymPlan[]
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  runs          Run[]
+  runPlans      RunPlan[]
+  gymPlans      GymPlan[]
+
+  @@unique([email])
+  @@map("user")
 }
 
 model Run {
-  id         Int      @id @default(autoincrement())
-  stravaId   String?  @unique
-  date       DateTime
-  distance   Float
-  duration   Float
-  pace       Float
-  notes      String?
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id])
+  id               Int      @id @default(autoincrement())
+  stravaId         String?  @unique
+  date             DateTime
+  distance         Float
+  duration         Float
+  pace             Float
+  notes            String?
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
   completedRunPlan RunPlan?
 }
 
 model RunPlan {
-  id              Int      @id @default(autoincrement())
+  id              Int    @id @default(autoincrement())
   week            Int
   day             Int
   type            String
   plannedTime     Float?
   plannedDistance Float?
-  completedRun    Run?     @relation(fields: [completedRunId], references: [id])
-  completedRunId  Int?     @unique // Link to the Run that completed this plan
-  userId          Int
-  user            User     @relation(fields: [userId], references: [id])
+  completedRun    Run?   @relation(fields: [completedRunId], references: [id])
+  completedRunId  Int?   @unique // Link to the Run that completed this plan
+  userId          String
+  user            User   @relation(fields: [userId], references: [id])
 }
 
 model GymPlan {
@@ -48,28 +58,73 @@ model GymPlan {
   day         Int
   muscleGroup String
   exercises   Exercise[]
-  userId      Int
+  userId      String
   user        User       @relation(fields: [userId], references: [id])
 }
 
 model Exercise {
-  id        Int     @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   gymPlanId Int
   name      String
   sets      Int
   reps      Int
   weight    Float
   completed CompletedExercise[]
-  gymPlan   GymPlan @relation(fields: [gymPlanId], references: [id])
+  gymPlan   GymPlan             @relation(fields: [gymPlanId], references: [id])
 }
 
 model CompletedExercise {
-  id          Int     @id @default(autoincrement())
-  exerciseId  Int
-  actualSets  Int
-  actualReps  Int
+  id           Int      @id @default(autoincrement())
+  exerciseId   Int
+  actualSets   Int
+  actualReps   Int
   actualWeight Float
-  notes       String?
-  createdAt   DateTime @default(now())
-  exercise    Exercise @relation(fields: [exerciseId], references: [id])
+  notes        String?
+  createdAt    DateTime @default(now())
+  exercise     Exercise @relation(fields: [exerciseId], references: [id])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
 }

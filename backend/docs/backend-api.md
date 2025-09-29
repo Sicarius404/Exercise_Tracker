@@ -6,6 +6,7 @@ The Exercise Tracker backend exposes a RESTful API grouped by domain modules. Al
 
 - Authentication and session management rely on Better Auth (`@thallesp/nestjs-better-auth`).
 - Endpoints decorated with `@UseGuards(AuthGuard)` expect a valid session cookie; the backend derives `req.user.id` automatically.
+- Use the Better Auth client SDK against its built-in `/sign-in/email` route for email/password login; the backend does not expose a custom `/auth/login` endpoint.
 
 ## Gym Plans (`/gym-plans`)
 
@@ -204,7 +205,7 @@ Handles OAuth return. Query params: `code`, optional `error`.
 
 ### POST `/strava/import-runs`
 
-- **Body**: `{ accessToken: string; userId: number }`
+- **Body**: `{ accessToken: string; userId: string }`
 - Fetches activities and maps them to run payloads (does not persist).
 
 ### GET `/strava/activities`

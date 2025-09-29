@@ -18,7 +18,7 @@ interface Run {
   duration: number;
   pace: number;
   notes?: string;
-  userId: number;
+  userId: string;
 }
 
 @Controller("runs")
@@ -35,7 +35,7 @@ export class RunsController {
       duration: number;
       pace: number;
       notes?: string;
-      userId: number;
+      userId: string;
     }
   ): Promise<Run> {
     const runData = {
@@ -47,7 +47,7 @@ export class RunsController {
 
   @Get()
   async findAll(@Query("userId") userId: string): Promise<Run[]> {
-    return this.runsService.findAll(parseInt(userId));
+    return this.runsService.findAll(userId);
   }
 
   @Get(":id")
@@ -55,7 +55,7 @@ export class RunsController {
     @Param("id") id: string,
     @Query("userId") userId: string
   ): Promise<Run | undefined> {
-    return this.runsService.findOne(parseInt(id), parseInt(userId));
+    return this.runsService.findOne(parseInt(id), userId);
   }
 
   @Patch(":id")
@@ -76,7 +76,7 @@ export class RunsController {
       ...updateRunDto,
       ...(updateRunDto.date && { date: new Date(updateRunDto.date) }),
     };
-    return this.runsService.update(parseInt(id), parseInt(userId), updateData);
+    return this.runsService.update(parseInt(id), userId, updateData);
   }
 
   @Delete(":id")
@@ -84,7 +84,7 @@ export class RunsController {
     @Param("id") id: string,
     @Query("userId") userId: string
   ): Promise<boolean> {
-    return this.runsService.remove(parseInt(id), parseInt(userId));
+    return this.runsService.remove(parseInt(id), userId);
   }
 
   @Get("strava/:stravaId")

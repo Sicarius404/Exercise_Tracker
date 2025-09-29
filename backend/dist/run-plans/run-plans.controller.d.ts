@@ -4,9 +4,9 @@ export declare class RunPlansController {
     constructor(runPlansService: RunPlansService);
     create(createRunPlanDto: any, req: any): Promise<{
         id: number;
-        userId: number;
         week: number;
         day: number;
+        userId: string;
         type: string;
         plannedTime: number | null;
         plannedDistance: number | null;
@@ -14,9 +14,9 @@ export declare class RunPlansController {
     }>;
     findAll(req: any): Promise<{
         id: number;
-        userId: number;
         week: number;
         day: number;
+        userId: string;
         type: string;
         plannedTime: number | null;
         plannedDistance: number | null;
@@ -24,9 +24,9 @@ export declare class RunPlansController {
     }[]>;
     findOne(id: string, req: any): Promise<{
         id: number;
-        userId: number;
         week: number;
         day: number;
+        userId: string;
         type: string;
         plannedTime: number | null;
         plannedDistance: number | null;
@@ -34,9 +34,9 @@ export declare class RunPlansController {
     }>;
     update(id: string, updateRunPlanDto: any, req: any): Promise<{
         id: number;
-        userId: number;
         week: number;
         day: number;
+        userId: string;
         type: string;
         plannedTime: number | null;
         plannedDistance: number | null;

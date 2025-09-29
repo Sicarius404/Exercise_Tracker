@@ -10,17 +10,13 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const nestjs_better_auth_1 = require("@thallesp/nestjs-better-auth");
 const auth_1 = require("./auth");
-const auth_controller_1 = require("./auth.controller");
-const auth_service_1 = require("./auth.service");
 const prisma_module_1 = require("../database/prisma.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, nestjs_better_auth_1.AuthModule.forRoot(auth_1.auth)],
-        controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService],
+        imports: [nestjs_better_auth_1.AuthModule.forRoot(auth_1.auth), prisma_module_1.PrismaModule],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

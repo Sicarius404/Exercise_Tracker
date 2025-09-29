@@ -17,6 +17,7 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./database/prisma.module");
 const run_plans_module_1 = require("./run-plans/run-plans.module");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,6 +31,9 @@ exports.AppModule = AppModule = __decorate([
             strava_module_1.StravaModule,
             prisma_module_1.PrismaModule,
             run_plans_module_1.RunPlansModule,
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

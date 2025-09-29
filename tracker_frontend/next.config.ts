@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    taint: true,
+    optimizePackageImports: ["lucide-react"],
+    
+  },
+  typedRoutes: true,
 };
 
 export default nextConfig;

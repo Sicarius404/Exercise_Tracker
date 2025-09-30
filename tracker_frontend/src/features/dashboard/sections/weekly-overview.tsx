@@ -49,13 +49,13 @@ const HIGHLIGHT_CARDS: Array<{
 ];
 
 export default function WeeklyOverview() {
-  const { metrics, isLoading, error, loadMetrics } = useWeeklyOverviewStore();
+  const { metrics, isLoading, error, hasLoaded, loadMetrics } = useWeeklyOverviewStore();
 
   useEffect(() => {
-    if (!metrics && !isLoading && !error) {
+    if (!hasLoaded && !isLoading && !error) {
       void loadMetrics();
     }
-  }, [metrics, isLoading, error, loadMetrics]);
+  }, [hasLoaded, isLoading, error, loadMetrics]);
 
   return (
     <DashboardCard className={`${styles.card} ${styles.chartCard}`}>

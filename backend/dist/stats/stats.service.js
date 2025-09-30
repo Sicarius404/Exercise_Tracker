@@ -79,7 +79,7 @@ let StatsService = class StatsService {
             heaviestDeadlift,
         };
     }
-    async getCalendarView(userId, month, year) {
+    async getCalendarView(userId, month = new Date().getMonth(), year = new Date().getFullYear()) {
         const startDate = new Date(year, month, 1);
         const endDate = new Date(year, month + 1, 0);
         const plannedRuns = await this.prisma.runPlan.findMany({

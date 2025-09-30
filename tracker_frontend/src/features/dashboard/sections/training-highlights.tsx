@@ -40,14 +40,14 @@ const FALLBACK_HIGHLIGHTS: TrainingHighlight[] = [
 ];
 
 export default function TrainingHighlights() {
-  const { highlights, isLoading, error, loadHighlights } =
+  const { highlights, isLoading, error, hasLoaded, loadHighlights } =
     useTrainingHighlightsStore();
 
   useEffect(() => {
-    if (!highlights.length && !isLoading && !error) {
+    if (!hasLoaded && !isLoading && !error) {
       void loadHighlights();
     }
-  }, [highlights.length, isLoading, error, loadHighlights]);
+  }, [hasLoaded, isLoading, error, loadHighlights]);
 
   const items = highlights.length ? highlights : FALLBACK_HIGHLIGHTS;
 

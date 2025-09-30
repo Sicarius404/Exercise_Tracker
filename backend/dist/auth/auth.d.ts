@@ -3026,12 +3026,14 @@ export declare const auth: {
     options: {
         database: (options: import("better-auth").BetterAuthOptions) => import("better-auth").Adapter;
         trustedOrigins: string[];
+        basePath: string;
         session: {
             cookie: {
                 name: string;
                 sameSite: string;
                 secure: boolean;
                 path: string;
+                httpOnly: boolean;
             };
             expiresIn: number;
             updateAge: number;

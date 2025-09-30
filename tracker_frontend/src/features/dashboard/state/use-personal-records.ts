@@ -9,6 +9,7 @@ type PersonalRecordsState = {
   records: PersonalRecords | null;
   isLoading: boolean;
   error: string | null;
+  hasLoaded: boolean;
   loadRecords: () => Promise<void>;
 };
 
@@ -17,6 +18,7 @@ export const usePersonalRecordsStore = create<PersonalRecordsState>()(
     records: null,
     isLoading: false,
     error: null,
+    hasLoaded: false,
     loadRecords: async () => {
       set((state) => {
         state.isLoading = true;
@@ -29,6 +31,7 @@ export const usePersonalRecordsStore = create<PersonalRecordsState>()(
         set((state) => {
           state.records = data;
           state.isLoading = false;
+          state.hasLoaded = true;
         });
       } catch (err) {
         set((state) => {

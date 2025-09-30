@@ -9,6 +9,7 @@ type WeeklyOverviewState = {
   metrics: WeeklyStats | null;
   isLoading: boolean;
   error: string | null;
+  hasLoaded: boolean;
   loadMetrics: () => Promise<void>;
 };
 
@@ -17,6 +18,7 @@ export const useWeeklyOverviewStore = create<WeeklyOverviewState>()(
     metrics: null,
     isLoading: false,
     error: null,
+    hasLoaded: false,
     loadMetrics: async () => {
       set((state) => {
         state.isLoading = true;
@@ -27,6 +29,7 @@ export const useWeeklyOverviewStore = create<WeeklyOverviewState>()(
         set((state) => {
           state.metrics = data;
           state.isLoading = false;
+          state.hasLoaded = true;
         });
       } catch (err) {
         set((state) => {

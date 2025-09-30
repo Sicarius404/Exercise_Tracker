@@ -6,13 +6,18 @@ const prisma = new PrismaClient();
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
-  trustedOrigins: [process.env.FRONTEND_URL ?? "http://localhost:3000"],
+  trustedOrigins: [
+    process.env.FRONTEND_URL ?? "http://localhost:3000",
+    "http://localhost:3001"
+  ],
+  basePath: "/api/auth",
   session: {
     cookie: {
-      name: "session_token",
+      name: "better-auth.session_token",
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       path: "/",
+      httpOnly: true,
     },
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,

@@ -152,8 +152,8 @@ export class StatsService {
 
   async getCalendarView(
     userId: string,
-    month?: number,
-    year?: number
+    month: number = new Date().getMonth(),
+    year: number = new Date().getFullYear()
   ): Promise<{
     plannedWorkouts: any[];
     completedWorkouts: any[];

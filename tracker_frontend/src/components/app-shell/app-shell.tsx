@@ -66,13 +66,8 @@ export default function AppShell({ children }: AppShellProps) {
   const router = useRouter();
 
   const signOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-        },
-      },
-    });
+    await authClient.signOut();
+    router.push("/login");
   };
 
   return (

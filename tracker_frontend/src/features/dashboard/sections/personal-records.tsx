@@ -51,13 +51,13 @@ function formatWeight(weight: number | null): string {
 }
 
 export default function PersonalRecords() {
-  const { records, isLoading, error, loadRecords } = usePersonalRecordsStore();
+  const { records, isLoading, error, hasLoaded, loadRecords } = usePersonalRecordsStore();
 
   useEffect(() => {
-    if (!records && !isLoading && !error) {
+    if (!hasLoaded && !isLoading && !error) {
       void loadRecords();
     }
-  }, [records, isLoading, error, loadRecords]);
+  }, [hasLoaded, isLoading, error, loadRecords]);
 
   return (
     <DashboardCard>

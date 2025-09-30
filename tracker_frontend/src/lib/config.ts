@@ -1,5 +1,5 @@
 export const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3333";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
 export const defaultUserId = Number(
   process.env.NEXT_PUBLIC_DEFAULT_USER_ID ?? 1

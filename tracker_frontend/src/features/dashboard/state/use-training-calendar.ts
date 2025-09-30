@@ -7,6 +7,7 @@ type TrainingCalendarState = {
   calendar: CalendarResponse | null;
   isLoading: boolean;
   error: string | null;
+  hasLoaded: boolean;
   loadCalendar: () => Promise<void>;
 };
 
@@ -15,6 +16,7 @@ export const useTrainingCalendar = create<TrainingCalendarState>()(
     calendar: null,
     isLoading: false,
     error: null,
+    hasLoaded: false,
     loadCalendar: async () => {
       set((state) => {
         state.isLoading = true;
@@ -25,6 +27,7 @@ export const useTrainingCalendar = create<TrainingCalendarState>()(
         set((state) => {
           state.calendar = data;
           state.isLoading = false;
+          state.hasLoaded = true;
         });
       } catch (err) {
         set((state) => {

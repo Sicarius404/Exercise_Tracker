@@ -19,6 +19,7 @@ type TrainingHighlightsState = {
   highlights: TrainingHighlight[];
   isLoading: boolean;
   error: string | null;
+  hasLoaded: boolean;
   loadHighlights: () => Promise<void>;
 };
 
@@ -27,6 +28,7 @@ export const useTrainingHighlightsStore = create<TrainingHighlightsState>()(
     highlights: [],
     isLoading: false,
     error: null,
+    hasLoaded: false,
     loadHighlights: async () => {
       set((state) => {
         state.isLoading = true;
@@ -42,6 +44,7 @@ export const useTrainingHighlightsStore = create<TrainingHighlightsState>()(
         set((state) => {
           state.highlights = highlights;
           state.isLoading = false;
+          state.hasLoaded = true;
         });
       } catch (err) {
         set((state) => {

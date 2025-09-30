@@ -32,13 +32,13 @@ function renderWorkoutItem(workout: CalendarWorkout) {
 }
 
 export default function TrainingCalendar() {
-  const { calendar, isLoading, loadCalendar } = useTrainingCalendar();
+  const { calendar, isLoading, hasLoaded, loadCalendar } = useTrainingCalendar();
 
   useEffect(() => {
-    if (!calendar && !isLoading) {
+    if (!hasLoaded && !isLoading) {
       void loadCalendar();
     }
-  }, [calendar, isLoading, loadCalendar]);
+  }, [hasLoaded, isLoading, loadCalendar]);
 
   return (
     <DashboardCard className={styles.calendarCard}>

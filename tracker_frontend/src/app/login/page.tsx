@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Swords } from "lucide-react";
+import type { Route } from "next";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function LoginPage() {
       }
 
       const redirect = searchParams.get("redirect") || "/";
-      router.push(redirect);
+      router.push(redirect as Route);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setIsLoading(false);
@@ -57,7 +58,7 @@ export default function LoginPage() {
       }
 
       const redirect = searchParams.get("redirect") || "/";
-      router.push(redirect);
+      router.push(redirect as Route);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setIsLoading(false);
@@ -71,7 +72,9 @@ export default function LoginPage() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600">
             <Swords className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900">Exercise Tracker</h1>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Exercise Tracker
+          </h1>
           <p className="mt-2 text-sm text-slate-600">
             Sign in to your account or create a new one
           </p>
@@ -83,9 +86,12 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSignIn}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-700"
+            >
               Email address
             </label>
             <input
@@ -100,7 +106,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-700"
+            >
               Password
             </label>
             <input
@@ -116,8 +125,7 @@ export default function LoginPage() {
 
           <div className="flex gap-3">
             <button
-              type="button"
-              onClick={handleSignIn}
+              type="submit"
               disabled={isLoading}
               className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
             >

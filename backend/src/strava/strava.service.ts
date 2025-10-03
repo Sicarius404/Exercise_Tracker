@@ -1,5 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { RunsService } from "../runs/runs.service";
+import { PrismaService } from "../database/prisma.service";
 
 interface StravaTokenResponse {
   access_token: string;
@@ -32,7 +33,10 @@ export class StravaService {
   private readonly CLIENT_ID = process.env.STRAVA_CLIENT_ID;
   private readonly CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 
-  constructor(private readonly runsService: RunsService) {}
+  constructor(
+    private readonly runsService: RunsService,
+    private readonly prisma: PrismaService
+  ) {}
 
   async exchangeCodeForToken(code: string): Promise<StravaTokenResponse> {
     try {
@@ -112,16 +116,19 @@ export class StravaService {
       );
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Strava API error:", response.status, errorText);
         throw new HttpException(
-          "Failed to fetch activities from Strava",
+          `Failed to fetch activities from Strava: ${response.status} - ${errorText}`,
           HttpStatus.BAD_REQUEST
         );
       }
 
       return response.json();
     } catch (error) {
+      console.error("Error fetching Strava activities:", error);
       throw new HttpException(
-        "Failed to fetch Strava activities",
+        `Failed to fetch Strava activities: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -187,8 +194,9 @@ export class StravaService {
   ): Promise<void> {
     try {
       const stravaActivities = await this.getActivities(accessToken);
+      const runActivities = stravaActivities.filter(act => act.type === "Run");
 
-      for (const activity of stravaActivities) {
+      for (const activity of runActivities) {
         const existingRun = await this.runsService.findByStravaId(
           activity.id.toString()
         );
@@ -199,8 +207,9 @@ export class StravaService {
         }
       }
     } catch (error) {
+      console.error("Error importing Strava activities:", error);
       throw new HttpException(
-        "Failed to import Strava activities",
+        `Failed to import Strava activities: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -233,11 +242,85 @@ export class StravaService {
       response_type: "code",
       redirect_uri:
         process.env.STRAVA_REDIRECT_URI ||
-        "http://localhost:3000/auth/strava/callback",
-      scope: "read,activity:read",
+        "http://localhost:3000/strava/callback",
+      scope: "read,activity:read_all",
       approval_prompt: "auto",
     });
 
     return `https://www.strava.com/oauth/authorize?${params.toString()}`;
+  }
+
+  async saveStravaTokens(
+    userId: string,
+    tokenData: StravaTokenResponse,
+    athleteId: string
+  ): Promise<void> {
+    try {
+      const expiresAt = new Date(tokenData.expires_at * 1000);
+      await this.prisma.account.upsert({
+        where: {
+          id: `${userId}_strava_${athleteId}`,
+        },
+        create: {
+          id: `${userId}_strava_${athleteId}`,
+          userId,
+          providerId: "strava",
+          accountId: athleteId,
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          accessTokenExpiresAt: expiresAt,
+          scope: "read,activity:read_all",
+        },
+        update: {
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          accessTokenExpiresAt: expiresAt,
+          updatedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      console.error("Error saving Strava tokens:", error);
+      throw new HttpException(
+        "Failed to save Strava connection",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  async getStravaAccount(userId: string): Promise<any> {
+    try {
+      const account = await this.prisma.account.findFirst({
+        where: {
+          userId,
+          providerId: "strava",
+        },
+      });
+      return account;
+    } catch (error) {
+      console.error("Error fetching Strava account:", error);
+      return null;
+    }
+  }
+
+  async getValidAccessToken(userId: string): Promise<string | null> {
+    try {
+      const account = await this.getStravaAccount(userId);
+      if (!account) {
+        return null;
+      }
+      const now = new Date();
+      if (account.accessTokenExpiresAt && account.accessTokenExpiresAt > now) {
+        return account.accessToken;
+      }
+      if (account.refreshToken) {
+        const tokenData = await this.refreshToken(account.refreshToken);
+        await this.saveStravaTokens(userId, tokenData, account.accountId);
+        return tokenData.access_token;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error getting valid access token:", error);
+      return null;
+    }
   }
 }

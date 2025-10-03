@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AlarmClock, BrainCircuit, ClipboardList } from "lucide-react";
 import styles from "../dashboard-page.module.css";
 import DashboardCard from "@/features/dashboard/shared/dashboard-card";
+import { useCurrentUser } from "@/lib/use-current-user";
 import {
   TrainingHighlight,
   useTrainingHighlightsStore,
@@ -40,14 +41,15 @@ const FALLBACK_HIGHLIGHTS: TrainingHighlight[] = [
 ];
 
 export default function TrainingHighlights() {
+  const { userId, isLoading: isLoadingUser } = useCurrentUser();
   const { highlights, isLoading, error, hasLoaded, loadHighlights } =
     useTrainingHighlightsStore();
 
   useEffect(() => {
-    if (!hasLoaded && !isLoading && !error) {
-      void loadHighlights();
+    if (!hasLoaded && !isLoading && !error && userId && !isLoadingUser) {
+      void loadHighlights(userId);
     }
-  }, [hasLoaded, isLoading, error, loadHighlights]);
+  }, [hasLoaded, isLoading, error, userId, isLoadingUser, loadHighlights]);
 
   const items = highlights.length ? highlights : FALLBACK_HIGHLIGHTS;
 

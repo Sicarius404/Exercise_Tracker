@@ -1,4 +1,5 @@
 import { RunsService } from "../runs/runs.service";
+import { PrismaService } from "../database/prisma.service";
 interface StravaTokenResponse {
     access_token: string;
     refresh_token: string;
@@ -24,10 +25,11 @@ interface StravaActivity {
 }
 export declare class StravaService {
     private readonly runsService;
+    private readonly prisma;
     private readonly STRAVA_API_BASE;
     private readonly CLIENT_ID;
     private readonly CLIENT_SECRET;
-    constructor(runsService: RunsService);
+    constructor(runsService: RunsService, prisma: PrismaService);
     exchangeCodeForToken(code: string): Promise<StravaTokenResponse>;
     refreshToken(refreshToken: string): Promise<StravaTokenResponse>;
     getActivities(accessToken: string, perPage?: number, page?: number): Promise<StravaActivity[]>;
@@ -44,5 +46,8 @@ export declare class StravaService {
         userId: string;
     };
     getAuthorizationUrl(): string;
+    saveStravaTokens(userId: string, tokenData: StravaTokenResponse, athleteId: string): Promise<void>;
+    getStravaAccount(userId: string): Promise<any>;
+    getValidAccessToken(userId: string): Promise<string | null>;
 }
 export {};

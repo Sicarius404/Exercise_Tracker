@@ -20,7 +20,7 @@ type TrainingHighlightsState = {
   isLoading: boolean;
   error: string | null;
   hasLoaded: boolean;
-  loadHighlights: () => Promise<void>;
+  loadHighlights: (userId: string) => Promise<void>;
 };
 
 export const useTrainingHighlightsStore = create<TrainingHighlightsState>()(
@@ -29,14 +29,15 @@ export const useTrainingHighlightsStore = create<TrainingHighlightsState>()(
     isLoading: false,
     error: null,
     hasLoaded: false,
-    loadHighlights: async () => {
+    loadHighlights: async (userId: string) => {
       set((state) => {
         state.isLoading = true;
         state.error = null;
       });
       try {
         const data = await fetchDashboardData<TrainingHighlightsResponse>(
-          "dashboard"
+          "dashboard",
+          { userId }
         );
         const highlights = Array.isArray(data.trainingHighlights)
           ? data.trainingHighlights

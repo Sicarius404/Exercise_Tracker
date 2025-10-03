@@ -21,12 +21,12 @@ let StatsService = class StatsService {
         this.gymPlansService = gymPlansService;
     }
     async getWeeklyStats(userId, weekStart) {
-        var weekStart = weekStart ?? new Date();
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 7);
+        const today = new Date();
+        const startDate = weekStart ?? new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const endDate = weekStart ? new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000) : today;
         const userRuns = await this.runsService.findAll(userId);
         const userGymPlans = await this.gymPlansService.findAll(userId);
-        const weeklyRuns = userRuns.filter((run) => run.date >= weekStart && run.date < weekEnd);
+        const weeklyRuns = userRuns.filter((run) => run.date >= startDate && run.date <= endDate);
         const totalMileage = weeklyRuns.reduce((sum, run) => sum + run.distance, 0);
         const totalDuration = weeklyRuns.reduce((sum, run) => sum + run.duration, 0);
         const averagePace = weeklyRuns.length > 0 ? totalDuration / weeklyRuns.length : 0;
@@ -142,7 +142,7 @@ let StatsService = class StatsService {
         const totalRuns = userRuns.length;
         const totalDistance = userRuns.reduce((sum, run) => sum + run.distance, 0);
         const totalDuration = userRuns.reduce((sum, run) => sum + run.duration, 0);
-        const averagePace = totalRuns > 0 ? totalDuration / totalRuns : 0;
+        const averagePace = totalDistance > 0 ? totalDuration / totalDistance : 0;
         const totalGymSessions = userGymPlans.length;
         const totalWeightLifted = userGymPlans.reduce((sum, plan) => sum +
             plan.exercises.reduce((planSum, exercise) => planSum +

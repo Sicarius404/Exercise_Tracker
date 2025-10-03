@@ -6,6 +6,7 @@ const process_1 = require("process");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
         bodyParser: false,
+        snapshot: true,
     });
     app.enableCors({
         origin: [

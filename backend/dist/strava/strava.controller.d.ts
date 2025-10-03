@@ -33,28 +33,42 @@ export declare class StravaController {
         details?: string;
         message?: string;
         tokenData?: StravaTokenResponse;
+        athleteId?: string;
     }>;
     importRuns(body: {
         accessToken: string;
+        refreshToken: string;
+        expiresAt: number;
         userId: string;
+        athleteId: string;
     }): Promise<{
         message: string;
-        runs: {
-            stravaId: string;
-            date: Date;
-            distance: number;
-            duration: number;
-            pace: number;
-            notes: string;
-            userId: string;
-        }[];
+        success: boolean;
         error?: undefined;
         details?: undefined;
     } | {
         error: string;
         details: any;
         message?: undefined;
-        runs?: undefined;
+        success?: undefined;
+    }>;
+    getConnectionStatus(userId: string): Promise<{
+        connected: boolean;
+        athleteId?: string;
+        error?: string;
+    }>;
+    syncRuns(body: {
+        userId: string;
+    }): Promise<{
+        message: string;
+        success: boolean;
+        error?: undefined;
+        details?: undefined;
+    } | {
+        error: string;
+        details: any;
+        message?: undefined;
+        success?: undefined;
     }>;
     getActivities(accessToken: string, page?: string): Promise<{
         activities?: StravaActivity[];

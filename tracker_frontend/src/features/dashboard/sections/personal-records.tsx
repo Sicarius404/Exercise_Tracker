@@ -5,6 +5,7 @@ import { Trophy } from "lucide-react";
 import styles from "../dashboard-page.module.css";
 import DashboardCard from "@/features/dashboard/shared/dashboard-card";
 import { usePersonalRecordsStore } from "@/features/dashboard/state/use-personal-records";
+import { useCurrentUser } from "@/lib/use-current-user";
 import type { PersonalRecords as PersonalRecordsResponse } from "@/lib/types";
 
 const RUN_LABELS: Record<
@@ -51,13 +52,14 @@ function formatWeight(weight: number | null): string {
 }
 
 export default function PersonalRecords() {
+  const { userId, isLoading: isLoadingUser } = useCurrentUser();
   const { records, isLoading, error, hasLoaded, loadRecords } = usePersonalRecordsStore();
 
   useEffect(() => {
-    if (!hasLoaded && !isLoading && !error) {
-      void loadRecords();
+    if (!hasLoaded && !isLoading && !error && userId && !isLoadingUser) {
+      void loadRecords(userId);
     }
-  }, [hasLoaded, isLoading, error, loadRecords]);
+  }, [hasLoaded, isLoading, error, userId, isLoadingUser, loadRecords]);
 
   return (
     <DashboardCard>

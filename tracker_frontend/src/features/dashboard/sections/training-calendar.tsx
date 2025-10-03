@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { CalendarRange, CheckCircle2, Clock4 } from "lucide-react";
 import styles from "../dashboard-page.module.css";
 import DashboardCard from "@/features/dashboard/shared/dashboard-card";
+import { useCurrentUser } from "@/lib/use-current-user";
 import { useTrainingCalendar } from "@/features/dashboard/state/use-training-calendar";
 import type { CalendarWorkout } from "@/lib/types";
 
@@ -32,13 +33,14 @@ function renderWorkoutItem(workout: CalendarWorkout) {
 }
 
 export default function TrainingCalendar() {
+  const { userId, isLoading: isLoadingUser } = useCurrentUser();
   const { calendar, isLoading, hasLoaded, loadCalendar } = useTrainingCalendar();
 
   useEffect(() => {
-    if (!hasLoaded && !isLoading) {
-      void loadCalendar();
+    if (!hasLoaded && !isLoading && userId && !isLoadingUser) {
+      void loadCalendar(userId);
     }
-  }, [hasLoaded, isLoading, loadCalendar]);
+  }, [hasLoaded, isLoading, userId, isLoadingUser, loadCalendar]);
 
   return (
     <DashboardCard className={styles.calendarCard}>

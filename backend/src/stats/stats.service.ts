@@ -21,15 +21,15 @@ export class StatsService {
     runCount: number;
     completedExercises: number;
   }> {
-    var weekStart = weekStart ?? new Date();
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 7);
+    const today = new Date();
+    const startDate = weekStart ?? new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const endDate = weekStart ? new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000) : today;
 
     const userRuns = await this.runsService.findAll(userId);
     const userGymPlans = await this.gymPlansService.findAll(userId);
 
     const weeklyRuns = userRuns.filter(
-      (run) => run.date >= weekStart && run.date < weekEnd
+      (run) => run.date >= startDate && run.date <= endDate
     );
 
     const totalMileage = weeklyRuns.reduce((sum, run) => sum + run.distance, 0);
@@ -249,7 +249,7 @@ export class StatsService {
     const totalRuns = userRuns.length;
     const totalDistance = userRuns.reduce((sum, run) => sum + run.distance, 0);
     const totalDuration = userRuns.reduce((sum, run) => sum + run.duration, 0);
-    const averagePace = totalRuns > 0 ? totalDuration / totalRuns : 0;
+    const averagePace = totalDistance > 0 ? totalDuration / totalDistance : 0;
 
     const totalGymSessions = userGymPlans.length;
 

@@ -18,12 +18,16 @@ const app_service_1 = require("./app.service");
 const prisma_module_1 = require("./database/prisma.module");
 const run_plans_module_1 = require("./run-plans/run-plans.module");
 const config_1 = require("@nestjs/config");
+const devtools_integration_1 = require("@nestjs/devtools-integration");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            devtools_integration_1.DevtoolsModule.register({
+                http: process.env.NODE_ENV !== "production",
+            }),
             auth_module_1.AuthModule,
             runs_module_1.RunsModule,
             gym_plans_module_1.GymPlansModule,

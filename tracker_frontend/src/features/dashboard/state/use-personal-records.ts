@@ -10,7 +10,7 @@ type PersonalRecordsState = {
   isLoading: boolean;
   error: string | null;
   hasLoaded: boolean;
-  loadRecords: () => Promise<void>;
+  loadRecords: (userId: string) => Promise<void>;
 };
 
 export const usePersonalRecordsStore = create<PersonalRecordsState>()(
@@ -19,14 +19,15 @@ export const usePersonalRecordsStore = create<PersonalRecordsState>()(
     isLoading: false,
     error: null,
     hasLoaded: false,
-    loadRecords: async () => {
+    loadRecords: async (userId: string) => {
       set((state) => {
         state.isLoading = true;
         state.error = null;
       });
       try {
         const data = await fetchDashboardData<PersonalRecords>(
-          "personalRecords"
+          "personalRecords",
+          { userId }
         );
         set((state) => {
           state.records = data;

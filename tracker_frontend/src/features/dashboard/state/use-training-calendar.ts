@@ -8,7 +8,7 @@ type TrainingCalendarState = {
   isLoading: boolean;
   error: string | null;
   hasLoaded: boolean;
-  loadCalendar: () => Promise<void>;
+  loadCalendar: (userId: string) => Promise<void>;
 };
 
 export const useTrainingCalendar = create<TrainingCalendarState>()(
@@ -17,13 +17,13 @@ export const useTrainingCalendar = create<TrainingCalendarState>()(
     isLoading: false,
     error: null,
     hasLoaded: false,
-    loadCalendar: async () => {
+    loadCalendar: async (userId: string) => {
       set((state) => {
         state.isLoading = true;
         state.error = null;
       });
       try {
-        const data = await fetchDashboardData<CalendarResponse>("calendar");
+        const data = await fetchDashboardData<CalendarResponse>("calendar", { userId });
         set((state) => {
           state.calendar = data;
           state.isLoading = false;

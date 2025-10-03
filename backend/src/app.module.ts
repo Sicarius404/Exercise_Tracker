@@ -9,9 +9,13 @@ import { AppService } from "./app.service";
 import { PrismaModule } from "./database/prisma.module";
 import { RunPlansModule } from "./run-plans/run-plans.module";
 import { ConfigModule } from "@nestjs/config";
+import { DevtoolsModule } from "@nestjs/devtools-integration";
 
 @Module({
   imports: [
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== "production",
+    }),
     AuthModule,
     RunsModule,
     GymPlansModule,
@@ -25,5 +29,6 @@ import { ConfigModule } from "@nestjs/config";
   ],
   controllers: [AppController],
   providers: [AppService],
+
 })
 export class AppModule {}

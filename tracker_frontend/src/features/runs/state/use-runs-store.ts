@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { httpRequest } from "@/lib/http";
-import { defaultUserId, runEndpoints } from "@/lib/config";
+import { runEndpoints } from "@/lib/config";
 import type { Run } from "@/lib/types";
 
 type CreateRunPayload = {
@@ -16,8 +16,8 @@ type RunsState = {
   runs: Run[];
   isLoading: boolean;
   error: string | null;
-  loadRuns: () => Promise<void>;
-  createRun: (payload: CreateRunPayload) => Promise<void>;
+  loadRuns: (userId: string) => Promise<void>;
+  createRun: (payload: CreateRunPayload, userId: string) => Promise<void>;
 };
 
 export const useRunsStore = create<RunsState>()(
@@ -25,7 +25,7 @@ export const useRunsStore = create<RunsState>()(
     runs: [],
     isLoading: false,
     error: null,
-    loadRuns: async () => {
+    loadRuns: async (userId: string) => {
       set((state) => {
         state.isLoading = true;
         state.error = null;
@@ -33,7 +33,7 @@ export const useRunsStore = create<RunsState>()(
 
       try {
         const response = await httpRequest<Run[]>(runEndpoints.runs, {
-          query: { userId: defaultUserId },
+          query: { userId },
         });
         set((state) => {
           state.runs = response;
@@ -47,11 +47,11 @@ export const useRunsStore = create<RunsState>()(
         });
       }
     },
-    createRun: async (payload) => {
+    createRun: async (payload, userId: string) => {
       const tempId = Date.now();
       const optimisticRun = {
         id: tempId,
-        userId: defaultUserId,
+        userId: Number(userId),
         stravaId: null,
         date: payload.date,
         distance: payload.distance,
@@ -69,23 +69,23 @@ export const useRunsStore = create<RunsState>()(
           method: "POST",
           body: {
             ...payload,
-            userId: defaultUserId,
+            userId,
           },
         });
 
         set((state) => {
-          const index = state.runs.findIndex((run: any) => run.id === tempId);
+          const index = state.runs.findIndex((run: Run) => run.id === tempId);
           if (index !== -1) {
             state.runs[index] = createdRun;
           }
         });
       } catch (err) {
         set((state) => {
-          state.runs = state.runs.filter((run: any) => run.id !== tempId);
+          state.runs = state.runs.filter((run: Run) => run.id !== tempId);
           state.error =
             err instanceof Error ? err.message : "Unable to create run";
         });
       }
     },
-  }))
+  })),
 );

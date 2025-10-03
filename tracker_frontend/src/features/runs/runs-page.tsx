@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRunsStore } from "@/features/runs/state/use-runs-store";
+import { useCurrentUser } from "@/lib/use-current-user";
 import PrimaryButton from "@/components/ui/primary-button/primary-button";
 import SecondaryButton from "@/components/ui/secondary-button/secondary-button";
 import styles from "./runs-page.module.css";
@@ -20,6 +21,7 @@ const runSchema = z.object({
 type RunForm = z.infer<typeof runSchema>;
 
 export default function RunsPage() {
+  const { userId, isLoading: isLoadingUser } = useCurrentUser();
   const { runs, isLoading, loadRuns, createRun } = useRunsStore();
   const { register, handleSubmit, reset, formState } = useForm<RunForm>({
     resolver: zodResolver(runSchema),
@@ -32,14 +34,16 @@ export default function RunsPage() {
   });
 
   useEffect(() => {
-    if (!runs.length && !isLoading) {
-      void loadRuns();
+    if (userId && !isLoadingUser) {
+      void loadRuns(userId);
     }
-  }, [runs.length, isLoading, loadRuns]);
+  }, [userId, isLoadingUser, loadRuns]);
 
   const onSubmit = async (values: RunForm) => {
-    await createRun(values);
-    reset();
+    if (userId) {
+      await createRun(values, userId);
+      reset();
+    }
   };
 
   return (

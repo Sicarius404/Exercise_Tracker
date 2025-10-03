@@ -46,6 +46,7 @@ export class StravaController {
     details?: string;
     message?: string;
     tokenData?: StravaTokenResponse;
+    athleteId?: string;
   }> {
     if (error) {
       return { error: "Strava authorization failed", details: error };
@@ -57,9 +58,13 @@ export class StravaController {
 
     try {
       const tokenData = await this.stravaService.exchangeCodeForToken(code);
+      const athleteData = await this.stravaService.getAthlete(
+        tokenData.access_token
+      );
       return {
         message: "Successfully connected to Strava",
         tokenData,
+        athleteId: athleteData.id.toString(),
       };
     } catch (err) {
       return {
@@ -70,25 +75,89 @@ export class StravaController {
   }
 
   @Post("import-runs")
-  async importRuns(@Body() body: { accessToken: string; userId: string }) {
+  async importRuns(
+    @Body()
+    body: {
+      accessToken: string;
+      refreshToken: string;
+      expiresAt: number;
+      userId: string;
+      athleteId: string;
+    }
+  ) {
     try {
-      const activities = await this.stravaService.getActivities(
+      await this.stravaService.importStravaActivities(
+        body.userId,
         body.accessToken
       );
-
-      // Convert Strava activities to our run format
-      const runs = activities
-        .filter((activity) => activity.type === "Run")
-        .map((activity) =>
-          this.stravaService.convertStravaActivityToRun(activity, body.userId)
-        );
+      await this.stravaService.saveStravaTokens(
+        body.userId,
+        {
+          access_token: body.accessToken,
+          refresh_token: body.refreshToken,
+          expires_at: body.expiresAt,
+          expires_in: 0,
+          token_type: "Bearer",
+        },
+        body.athleteId
+      );
 
       return {
-        message: `Found ${runs.length} runs to import`,
-        runs,
+        message: `Successfully imported runs from Strava`,
+        success: true,
       };
     } catch (err) {
       return { error: "Failed to import runs", details: err.message };
+    }
+  }
+
+  @Get("connection-status")
+  async getConnectionStatus(
+    @Query("userId") userId: string
+  ): Promise<{
+    connected: boolean;
+    athleteId?: string;
+    error?: string;
+  }> {
+    try {
+      const account = await this.stravaService.getStravaAccount(userId);
+      if (!account) {
+        return { connected: false };
+      }
+      return {
+        connected: true,
+        athleteId: account.accountId,
+      };
+    } catch (err) {
+      return {
+        connected: false,
+        error: err.message,
+      };
+    }
+  }
+
+  @Post("sync-runs")
+  async syncRuns(@Body() body: { userId: string }) {
+    try {
+      const accessToken = await this.stravaService.getValidAccessToken(
+        body.userId
+      );
+      if (!accessToken) {
+        return {
+          error: "Not connected to Strava",
+          details: "Please connect your Strava account first",
+        };
+      }
+      await this.stravaService.importStravaActivities(
+        body.userId,
+        accessToken
+      );
+      return {
+        message: "Successfully synced runs from Strava",
+        success: true,
+      };
+    } catch (err) {
+      return { error: "Failed to sync runs", details: err.message };
     }
   }
 

@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const strava_controller_1 = require("./strava.controller");
 const strava_service_1 = require("./strava.service");
 const runs_module_1 = require("../runs/runs.module");
+const prisma_module_1 = require("../database/prisma.module");
 let StravaModule = class StravaModule {
 };
 exports.StravaModule = StravaModule;
 exports.StravaModule = StravaModule = __decorate([
     (0, common_1.Module)({
-        imports: [runs_module_1.RunsModule],
+        imports: [runs_module_1.RunsModule, prisma_module_1.PrismaModule],
         controllers: [strava_controller_1.StravaController],
         providers: [strava_service_1.StravaService],
     })

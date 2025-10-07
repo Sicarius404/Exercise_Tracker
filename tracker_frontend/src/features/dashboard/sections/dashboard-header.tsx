@@ -18,8 +18,12 @@ export default function DashboardHeader() {
         </div>
       </div>
       <div className={styles.actions}>
-        <SecondaryButton icon={Calendar}>Calendar</SecondaryButton>
-        <SecondaryButton icon={ArrowUpRight}>Import Strava</SecondaryButton>
+        <SecondaryButton icon={Calendar} size="sm">
+          Calendar
+        </SecondaryButton>
+        <SecondaryButton icon={ArrowUpRight} size="sm">
+          Import Strava
+        </SecondaryButton>
         <PrimaryButton icon={Plus}>New workout</PrimaryButton>
       </div>
     </header>

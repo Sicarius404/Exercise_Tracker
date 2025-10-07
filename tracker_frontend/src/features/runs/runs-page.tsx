@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +32,16 @@ export default function RunsPage() {
       pace: 6,
     },
   });
+
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+    []
+  );
 
   useEffect(() => {
     if (userId && !isLoadingUser) {
@@ -133,13 +143,17 @@ export default function RunsPage() {
       <section className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead className={styles.thead}>
-            <tr>
-              <th>Date</th>
-              <th>Distance</th>
-              <th>Duration</th>
-              <th>Pace</th>
-              <th>Notes</th>
-              <th />
+            <tr className={styles.headerRow}>
+              <th className={styles.headerCell}>Date</th>
+              <th className={styles.headerCell}>Distance</th>
+              <th className={styles.headerCell}>Duration</th>
+              <th className={styles.headerCell}>Pace</th>
+              <th className={styles.headerCell}>Notes</th>
+              <th
+                className={`${styles.headerCell} ${styles.headerCellActions}`}
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -157,16 +171,47 @@ export default function RunsPage() {
               </tr>
             ) : (
               runs.map((run) => (
-                <tr key={run.id}>
-                  <td>{new Date(run.date).toLocaleDateString()}</td>
-                  <td>{run.distance.toFixed(1)} km</td>
-                  <td>{run.duration.toFixed(0)} min</td>
-                  <td>{run.pace.toFixed(1)} min/km</td>
-                  <td>{run.notes ?? "—"}</td>
-                  <td>
+                <tr key={run.id} className={styles.dataRow}>
+                  <td className={styles.dataCell}>
+                    <span className={styles.dateCell}>
+                      {dateFormatter.format(new Date(run.date))}
+                    </span>
+                  </td>
+                  <td className={styles.dataCell}>
+                    <span className={styles.metric}>
+                      <span className={styles.metricValue}>
+                        {run.distance.toFixed(1)}
+                      </span>
+                      <span className={styles.metricUnit}>km</span>
+                    </span>
+                  </td>
+                  <td className={styles.dataCell}>
+                    <span className={styles.metric}>
+                      <span className={styles.metricValue}>
+                        {run.duration.toFixed(0)}
+                      </span>
+                      <span className={styles.metricUnit}>min</span>
+                    </span>
+                  </td>
+                  <td className={styles.dataCell}>
+                    <span className={styles.metricAccent}>
+                      <span className={styles.metricValue}>
+                        {run.pace.toFixed(1)}
+                      </span>
+                      <span className={styles.metricUnit}>min/km</span>
+                    </span>
+                  </td>
+                  <td className={`${styles.dataCell} ${styles.notesCell}`}>
+                    {run.notes ?? "—"}
+                  </td>
+                  <td className={`${styles.dataCell} ${styles.actionsCell}`}>
                     <div className={styles.rowActions}>
-                      <SecondaryButton type="button">Edit</SecondaryButton>
-                      <SecondaryButton type="button">Delete</SecondaryButton>
+                      <SecondaryButton type="button" size="sm">
+                        Edit
+                      </SecondaryButton>
+                      <SecondaryButton type="button" intent="danger" size="sm">
+                        Delete
+                      </SecondaryButton>
                     </div>
                   </td>
                 </tr>

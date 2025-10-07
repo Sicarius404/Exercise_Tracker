@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const publicRoutes = new Set(["/", "/login", "/signup", "/strava/callback", "/runs", "/plans", "/gym", "/strava", "/settings", "/security"]);
+const publicRoutes = new Set(["/login", "/signup", "/strava/callback"]);
 const authCookieName = "better-auth.session_token";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  if (publicRoutes.has(path) || path.startsWith("/api") || path.startsWith("/_next")) {
+  if (
+    publicRoutes.has(path) ||
+    path.startsWith("/api") ||
+    path.startsWith("/_next")
+  ) {
     return NextResponse.next();
   }
 

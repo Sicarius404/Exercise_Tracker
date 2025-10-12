@@ -1,5 +1,12 @@
-import { Controller, Get, Post, Query, Body, Redirect } from "@nestjs/common";
+import { Controller, Get, Post, Query, Body, UsePipes, ValidationPipe } from "@nestjs/common";
 import { StravaService } from "./strava.service";
+import {
+  ImportRunsDto,
+  SyncRunsDto,
+  GetActivitiesDto,
+  GetAthleteDto,
+  GetConnectionStatusDto,
+} from "./dto/strava.dto";
 
 interface StravaTokenResponse {
   access_token: string;
@@ -27,6 +34,7 @@ interface StravaActivity {
 }
 
 @Controller("strava")
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class StravaController {
   constructor(private readonly stravaService: StravaService) {}
 
@@ -66,7 +74,7 @@ export class StravaController {
         tokenData,
         athleteId: athleteData.id.toString(),
       };
-    } catch (err) {
+    } catch (err: any) {
       return {
         error: "Failed to exchange code for token",
         details: err.message,
@@ -75,52 +83,45 @@ export class StravaController {
   }
 
   @Post("import-runs")
-  async importRuns(
-    @Body()
-    body: {
-      accessToken: string;
-      refreshToken: string;
-      expiresAt: number;
-      userId: string;
-      athleteId: string;
-    }
-  ) {
+  async importRuns(@Body() importRunsDto: ImportRunsDto) {
     try {
       await this.stravaService.importStravaActivities(
-        body.userId,
-        body.accessToken
+        importRunsDto.userId,
+        importRunsDto.accessToken
       );
       await this.stravaService.saveStravaTokens(
-        body.userId,
+        importRunsDto.userId,
         {
-          access_token: body.accessToken,
-          refresh_token: body.refreshToken,
-          expires_at: body.expiresAt,
+          access_token: importRunsDto.accessToken,
+          refresh_token: importRunsDto.refreshToken,
+          expires_at: importRunsDto.expiresAt,
           expires_in: 0,
           token_type: "Bearer",
         },
-        body.athleteId
+        importRunsDto.athleteId
       );
 
       return {
         message: `Successfully imported runs from Strava`,
         success: true,
       };
-    } catch (err) {
+    } catch (err: any) {
       return { error: "Failed to import runs", details: err.message };
     }
   }
 
   @Get("connection-status")
   async getConnectionStatus(
-    @Query("userId") userId: string
+    @Query() getConnectionStatusDto: GetConnectionStatusDto
   ): Promise<{
     connected: boolean;
     athleteId?: string;
     error?: string;
   }> {
     try {
-      const account = await this.stravaService.getStravaAccount(userId);
+      const account = await this.stravaService.getStravaAccount(
+        getConnectionStatusDto.userId
+      );
       if (!account) {
         return { connected: false };
       }
@@ -128,7 +129,7 @@ export class StravaController {
         connected: true,
         athleteId: account.accountId,
       };
-    } catch (err) {
+    } catch (err: any) {
       return {
         connected: false,
         error: err.message,
@@ -137,10 +138,10 @@ export class StravaController {
   }
 
   @Post("sync-runs")
-  async syncRuns(@Body() body: { userId: string }) {
+  async syncRuns(@Body() syncRunsDto: SyncRunsDto) {
     try {
       const accessToken = await this.stravaService.getValidAccessToken(
-        body.userId
+        syncRunsDto.userId
       );
       if (!accessToken) {
         return {
@@ -149,22 +150,21 @@ export class StravaController {
         };
       }
       await this.stravaService.importStravaActivities(
-        body.userId,
+        syncRunsDto.userId,
         accessToken
       );
       return {
         message: "Successfully synced runs from Strava",
         success: true,
       };
-    } catch (err) {
+    } catch (err: any) {
       return { error: "Failed to sync runs", details: err.message };
     }
   }
 
   @Get("activities")
   async getActivities(
-    @Query("accessToken") accessToken: string,
-    @Query("page") page?: string
+    @Query() getActivitiesDto: GetActivitiesDto
   ): Promise<{
     activities?: StravaActivity[];
     error?: string;
@@ -172,24 +172,24 @@ export class StravaController {
   }> {
     try {
       const activities = await this.stravaService.getActivities(
-        accessToken,
+        getActivitiesDto.accessToken,
         30,
-        parseInt(page) || 1
+        parseInt(getActivitiesDto.page || "1")
       );
       return { activities };
-    } catch (err) {
+    } catch (err: any) {
       return { error: "Failed to fetch activities", details: err.message };
     }
   }
 
   @Get("athlete")
   async getAthlete(
-    @Query("accessToken") accessToken: string
+    @Query() getAthleteDto: GetAthleteDto
   ): Promise<{ athlete?: any; error?: string; details?: string }> {
     try {
-      const athlete = await this.stravaService.getAthlete(accessToken);
+      const athlete = await this.stravaService.getAthlete(getAthleteDto.accessToken);
       return { athlete };
-    } catch (err) {
+    } catch (err: any) {
       return { error: "Failed to fetch athlete data", details: err.message };
     }
   }

@@ -15,28 +15,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatsController = void 0;
 const common_1 = require("@nestjs/common");
 const stats_service_1 = require("./stats.service");
+const stats_dto_1 = require("./dto/stats.dto");
 let StatsController = class StatsController {
     constructor(statsService) {
         this.statsService = statsService;
     }
-    async getWeeklyStats(userId, weekStart) {
-        const weekStartDate = weekStart ? new Date(weekStart) : undefined;
-        return this.statsService.getWeeklyStats(userId, weekStartDate);
+    async getWeeklyStats(getWeeklyStatsDto) {
+        const weekStartDate = getWeeklyStatsDto.weekStart
+            ? new Date(getWeeklyStatsDto.weekStart)
+            : undefined;
+        return this.statsService.getWeeklyStats(getWeeklyStatsDto.userId, weekStartDate);
     }
-    async getPersonalRecords(userId) {
-        return this.statsService.getPersonalRecords(userId);
+    async getPersonalRecords(getPersonalRecordsDto) {
+        return this.statsService.getPersonalRecords(getPersonalRecordsDto.userId);
     }
-    async getCalendarView(userId, month, year) {
-        return this.statsService.getCalendarView(userId, month ? parseInt(month) : undefined, year ? parseInt(year) : undefined);
+    async getCalendarView(getCalendarViewDto) {
+        return this.statsService.getCalendarView(getCalendarViewDto.userId, getCalendarViewDto.month, getCalendarViewDto.year);
     }
-    async getMonthlySummary(userId, month, year) {
-        return this.statsService.getMonthlySummary(userId, parseInt(month), parseInt(year));
+    async getMonthlySummary(getMonthlySummaryDto) {
+        return this.statsService.getMonthlySummary(getMonthlySummaryDto.userId, getMonthlySummaryDto.month, getMonthlySummaryDto.year);
     }
-    async getDashboardData(userId) {
+    async getDashboardData(getDashboardDataDto) {
         const [weeklyStats, personalRecords, calendarView] = await Promise.all([
-            this.statsService.getWeeklyStats(userId),
-            this.statsService.getPersonalRecords(userId),
-            this.statsService.getCalendarView(userId),
+            this.statsService.getWeeklyStats(getDashboardDataDto.userId),
+            this.statsService.getPersonalRecords(getDashboardDataDto.userId),
+            this.statsService.getCalendarView(getDashboardDataDto.userId),
         ]);
         return {
             weeklyStats,
@@ -48,46 +51,47 @@ let StatsController = class StatsController {
 exports.StatsController = StatsController;
 __decorate([
     (0, common_1.Get)("weekly"),
-    __param(0, (0, common_1.Query)("userId")),
-    __param(1, (0, common_1.Query)("weekStart")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [stats_dto_1.GetWeeklyStatsDto]),
     __metadata("design:returntype", Promise)
 ], StatsController.prototype, "getWeeklyStats", null);
 __decorate([
     (0, common_1.Get)("personal-records"),
-    __param(0, (0, common_1.Query)("userId")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [stats_dto_1.GetPersonalRecordsDto]),
     __metadata("design:returntype", Promise)
 ], StatsController.prototype, "getPersonalRecords", null);
 __decorate([
     (0, common_1.Get)("calendar"),
-    __param(0, (0, common_1.Query)("userId")),
-    __param(1, (0, common_1.Query)("month")),
-    __param(2, (0, common_1.Query)("year")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [stats_dto_1.GetCalendarViewDto]),
     __metadata("design:returntype", Promise)
 ], StatsController.prototype, "getCalendarView", null);
 __decorate([
     (0, common_1.Get)("monthly"),
-    __param(0, (0, common_1.Query)("userId")),
-    __param(1, (0, common_1.Query)("month")),
-    __param(2, (0, common_1.Query)("year")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [stats_dto_1.GetMonthlySummaryDto]),
     __metadata("design:returntype", Promise)
 ], StatsController.prototype, "getMonthlySummary", null);
 __decorate([
     (0, common_1.Get)("dashboard"),
-    __param(0, (0, common_1.Query)("userId")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [stats_dto_1.GetDashboardDataDto]),
     __metadata("design:returntype", Promise)
 ], StatsController.prototype, "getDashboardData", null);
 exports.StatsController = StatsController = __decorate([
     (0, common_1.Controller)("stats"),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+    })),
     __metadata("design:paramtypes", [stats_service_1.StatsService])
 ], StatsController);
 //# sourceMappingURL=stats.controller.js.map

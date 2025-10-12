@@ -1,8 +1,9 @@
 import { RunPlansService } from "./run-plans.service";
+import { CreateRunPlanDto, UpdateRunPlanDto } from "./dto/run-plan.dto";
 export declare class RunPlansController {
     private readonly runPlansService;
     constructor(runPlansService: RunPlansService);
-    create(createRunPlanDto: any, req: any): Promise<{
+    create(createRunPlanDto: CreateRunPlanDto, req: any): Promise<{
         id: number;
         userId: string;
         week: number;
@@ -31,8 +32,8 @@ export declare class RunPlansController {
         plannedTime: number | null;
         plannedDistance: number | null;
         completedRunId: number | null;
-    }>;
-    update(id: string, updateRunPlanDto: any, req: any): Promise<{
+    } | null>;
+    update(id: string, updateRunPlanDto: UpdateRunPlanDto, req: any): Promise<{
         id: number;
         userId: string;
         week: number;
@@ -41,6 +42,6 @@ export declare class RunPlansController {
         plannedTime: number | null;
         plannedDistance: number | null;
         completedRunId: number | null;
-    }>;
+    } | null>;
     remove(id: string, req: any): Promise<boolean>;
 }

@@ -8,17 +8,21 @@ import {
   Delete,
   Request,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { RunPlansService } from "./run-plans.service";
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
+import { CreateRunPlanDto, UpdateRunPlanDto } from "./dto/run-plan.dto";
 
 @Controller("run-plans")
 @UseGuards(AuthGuard)
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class RunPlansController {
   constructor(private readonly runPlansService: RunPlansService) {}
 
   @Post()
-  create(@Body() createRunPlanDto: any, @Request() req: any) {
+  create(@Body() createRunPlanDto: CreateRunPlanDto, @Request() req: any) {
     const userId = req.user.id;
     return this.runPlansService.create({ ...createRunPlanDto, userId });
   }
@@ -38,7 +42,7 @@ export class RunPlansController {
   @Patch(":id")
   update(
     @Param("id") id: string,
-    @Body() updateRunPlanDto: any,
+    @Body() updateRunPlanDto: UpdateRunPlanDto,
     @Request() req: any
   ) {
     const userId = req.user.id;

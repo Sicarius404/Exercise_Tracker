@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StravaController = void 0;
 const common_1 = require("@nestjs/common");
 const strava_service_1 = require("./strava.service");
+const strava_dto_1 = require("./dto/strava.dto");
 let StravaController = class StravaController {
     constructor(stravaService) {
         this.stravaService = stravaService;
@@ -47,16 +48,16 @@ let StravaController = class StravaController {
             };
         }
     }
-    async importRuns(body) {
+    async importRuns(importRunsDto) {
         try {
-            await this.stravaService.importStravaActivities(body.userId, body.accessToken);
-            await this.stravaService.saveStravaTokens(body.userId, {
-                access_token: body.accessToken,
-                refresh_token: body.refreshToken,
-                expires_at: body.expiresAt,
+            await this.stravaService.importStravaActivities(importRunsDto.userId, importRunsDto.accessToken);
+            await this.stravaService.saveStravaTokens(importRunsDto.userId, {
+                access_token: importRunsDto.accessToken,
+                refresh_token: importRunsDto.refreshToken,
+                expires_at: importRunsDto.expiresAt,
                 expires_in: 0,
                 token_type: "Bearer",
-            }, body.athleteId);
+            }, importRunsDto.athleteId);
             return {
                 message: `Successfully imported runs from Strava`,
                 success: true,
@@ -66,9 +67,9 @@ let StravaController = class StravaController {
             return { error: "Failed to import runs", details: err.message };
         }
     }
-    async getConnectionStatus(userId) {
+    async getConnectionStatus(getConnectionStatusDto) {
         try {
-            const account = await this.stravaService.getStravaAccount(userId);
+            const account = await this.stravaService.getStravaAccount(getConnectionStatusDto.userId);
             if (!account) {
                 return { connected: false };
             }
@@ -84,16 +85,16 @@ let StravaController = class StravaController {
             };
         }
     }
-    async syncRuns(body) {
+    async syncRuns(syncRunsDto) {
         try {
-            const accessToken = await this.stravaService.getValidAccessToken(body.userId);
+            const accessToken = await this.stravaService.getValidAccessToken(syncRunsDto.userId);
             if (!accessToken) {
                 return {
                     error: "Not connected to Strava",
                     details: "Please connect your Strava account first",
                 };
             }
-            await this.stravaService.importStravaActivities(body.userId, accessToken);
+            await this.stravaService.importStravaActivities(syncRunsDto.userId, accessToken);
             return {
                 message: "Successfully synced runs from Strava",
                 success: true,
@@ -103,18 +104,18 @@ let StravaController = class StravaController {
             return { error: "Failed to sync runs", details: err.message };
         }
     }
-    async getActivities(accessToken, page) {
+    async getActivities(getActivitiesDto) {
         try {
-            const activities = await this.stravaService.getActivities(accessToken, 30, parseInt(page) || 1);
+            const activities = await this.stravaService.getActivities(getActivitiesDto.accessToken, 30, parseInt(getActivitiesDto.page || "1"));
             return { activities };
         }
         catch (err) {
             return { error: "Failed to fetch activities", details: err.message };
         }
     }
-    async getAthlete(accessToken) {
+    async getAthlete(getAthleteDto) {
         try {
-            const athlete = await this.stravaService.getAthlete(accessToken);
+            const athlete = await this.stravaService.getAthlete(getAthleteDto.accessToken);
             return { athlete };
         }
         catch (err) {
@@ -141,40 +142,40 @@ __decorate([
     (0, common_1.Post)("import-runs"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [strava_dto_1.ImportRunsDto]),
     __metadata("design:returntype", Promise)
 ], StravaController.prototype, "importRuns", null);
 __decorate([
     (0, common_1.Get)("connection-status"),
-    __param(0, (0, common_1.Query)("userId")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [strava_dto_1.GetConnectionStatusDto]),
     __metadata("design:returntype", Promise)
 ], StravaController.prototype, "getConnectionStatus", null);
 __decorate([
     (0, common_1.Post)("sync-runs"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [strava_dto_1.SyncRunsDto]),
     __metadata("design:returntype", Promise)
 ], StravaController.prototype, "syncRuns", null);
 __decorate([
     (0, common_1.Get)("activities"),
-    __param(0, (0, common_1.Query)("accessToken")),
-    __param(1, (0, common_1.Query)("page")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [strava_dto_1.GetActivitiesDto]),
     __metadata("design:returntype", Promise)
 ], StravaController.prototype, "getActivities", null);
 __decorate([
     (0, common_1.Get)("athlete"),
-    __param(0, (0, common_1.Query)("accessToken")),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [strava_dto_1.GetAthleteDto]),
     __metadata("design:returntype", Promise)
 ], StravaController.prototype, "getAthlete", null);
 exports.StravaController = StravaController = __decorate([
     (0, common_1.Controller)("strava"),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __metadata("design:paramtypes", [strava_service_1.StravaService])
 ], StravaController);
 //# sourceMappingURL=strava.controller.js.map

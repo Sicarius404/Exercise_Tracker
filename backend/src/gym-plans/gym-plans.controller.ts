@@ -8,19 +8,28 @@ import {
   Delete,
   Request,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { GymPlansService } from "./gym-plans.service";
-import { AuthGuard, Session, UserSession } from "@thallesp/nestjs-better-auth";
+import { AuthGuard } from "@thallesp/nestjs-better-auth";
+import {
+  CreateGymPlanDto,
+  UpdateGymPlanDto,
+  ExerciseDto,
+  UpdateExerciseDto,
+  CompleteExerciseDto,
+} from "./dto/gym-plan.dto";
 
 @Controller("gym-plans")
 @UseGuards(AuthGuard)
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class GymPlansController {
   constructor(private readonly gymPlansService: GymPlansService) {}
 
   @Post()
   create(
-    @Body()
-    createGymPlanDto: any,
+    @Body() createGymPlanDto: CreateGymPlanDto,
     @Request() req: any
   ) {
     const userId = req.user.id;
@@ -42,8 +51,7 @@ export class GymPlansController {
   @Patch(":id")
   update(
     @Param("id") id: string,
-    @Body()
-    updateGymPlanDto: any,
+    @Body() updateGymPlanDto: UpdateGymPlanDto,
     @Request() req: any
   ) {
     const userId = req.user.id;
@@ -59,7 +67,7 @@ export class GymPlansController {
   @Post(":id/exercises")
   addExercise(
     @Param("id") gymPlanId: string,
-    @Body() exerciseData: any,
+    @Body() exerciseData: ExerciseDto,
     @Request() req: any
   ) {
     const userId = req.user.id;
@@ -69,8 +77,7 @@ export class GymPlansController {
   @Patch("exercises/:exerciseId")
   updateExercise(
     @Param("exerciseId") exerciseId: string,
-    @Body()
-    updateData: any,
+    @Body() updateData: UpdateExerciseDto,
     @Request() req: any
   ) {
     const userId = req.user.id;
@@ -86,14 +93,21 @@ export class GymPlansController {
   @Post("exercises/:exerciseId/complete")
   completeExercise(
     @Param("exerciseId") exerciseId: string,
-    @Body() completedData: any,
+    @Body() completedData: CompleteExerciseDto,
     @Request() req: any
   ) {
     const userId = req.user.id;
+    const exerciseData = {
+      actualSets: completedData.actualSets,
+      actualReps: completedData.actualReps,
+      actualWeight: completedData.actualWeight,
+      notes: completedData.notes || null,
+      createdAt: new Date(),
+    };
     return this.gymPlansService.completeExercise(
       +exerciseId,
       userId,
-      completedData
+      exerciseData
     );
   }
 }

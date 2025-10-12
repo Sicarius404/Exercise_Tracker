@@ -83,6 +83,7 @@ export default function RunsPage() {
                 className={styles.input}
                 {...register("date")}
               />
+              <span className={styles.fieldValueHint}>Default: today</span>
             </label>
             <label className={styles.field}>
               <span className={styles.label}>Distance (km)</span>
@@ -92,6 +93,7 @@ export default function RunsPage() {
                 className={styles.input}
                 {...register("distance")}
               />
+              <span className={styles.fieldValueHint}>Default: 5 km</span>
             </label>
             <label className={styles.field}>
               <span className={styles.label}>Duration (min)</span>
@@ -101,6 +103,7 @@ export default function RunsPage() {
                 className={styles.input}
                 {...register("duration")}
               />
+              <span className={styles.fieldValueHint}>Default: 30 min</span>
             </label>
             <label className={styles.field}>
               <span className={styles.label}>Pace (min/km)</span>
@@ -110,6 +113,9 @@ export default function RunsPage() {
                 className={styles.input}
                 {...register("pace")}
               />
+              <span className={styles.fieldValueHint}>
+                Default: 6:00 min/km
+              </span>
             </label>
             <label className={`${styles.field} col-span-full`}>
               <span className={styles.label}>Notes</span>

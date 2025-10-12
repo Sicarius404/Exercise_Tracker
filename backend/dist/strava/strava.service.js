@@ -83,7 +83,8 @@ let StravaService = class StravaService {
         }
         catch (error) {
             console.error("Error fetching Strava activities:", error);
-            throw new common_1.HttpException(`Failed to fetch Strava activities: ${error.message}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            throw new common_1.HttpException(`Failed to fetch Strava activities: ${errorMessage}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     async getActivity(accessToken, activityId) {
@@ -132,7 +133,8 @@ let StravaService = class StravaService {
         }
         catch (error) {
             console.error("Error importing Strava activities:", error);
-            throw new common_1.HttpException(`Failed to import Strava activities: ${error.message}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            throw new common_1.HttpException(`Failed to import Strava activities: ${errorMessage}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     convertStravaActivityToRun(stravaActivity, userId) {

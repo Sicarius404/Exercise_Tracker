@@ -1,56 +1,73 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { StatsService } from "./stats.service";
+import {
+  GetWeeklyStatsDto,
+  GetPersonalRecordsDto,
+  GetCalendarViewDto,
+  GetMonthlySummaryDto,
+  GetDashboardDataDto,
+} from "./dto/stats.dto";
 
 @Controller("stats")
+@UsePipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
+  })
+)
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
   @Get("weekly")
-  async getWeeklyStats(
-    @Query("userId") userId: string,
-    @Query("weekStart") weekStart?: string
-  ) {
-    const weekStartDate = weekStart ? new Date(weekStart) : undefined;
-    return this.statsService.getWeeklyStats(userId, weekStartDate);
+  async getWeeklyStats(@Query() getWeeklyStatsDto: GetWeeklyStatsDto) {
+    const weekStartDate = getWeeklyStatsDto.weekStart
+      ? new Date(getWeeklyStatsDto.weekStart)
+      : undefined;
+    return this.statsService.getWeeklyStats(
+      getWeeklyStatsDto.userId,
+      weekStartDate
+    );
   }
 
   @Get("personal-records")
-  async getPersonalRecords(@Query("userId") userId: string) {
-    return this.statsService.getPersonalRecords(userId);
+  async getPersonalRecords(
+    @Query() getPersonalRecordsDto: GetPersonalRecordsDto
+  ) {
+    return this.statsService.getPersonalRecords(getPersonalRecordsDto.userId);
   }
 
   @Get("calendar")
-  async getCalendarView(
-    @Query("userId") userId: string,
-    @Query("month") month?: string,
-    @Query("year") year?: string
-  ) {
+  async getCalendarView(@Query() getCalendarViewDto: GetCalendarViewDto) {
     return this.statsService.getCalendarView(
-      userId,
-      month ? parseInt(month) : undefined,
-      year ? parseInt(year) : undefined
+      getCalendarViewDto.userId,
+      getCalendarViewDto.month,
+      getCalendarViewDto.year
     );
   }
 
   @Get("monthly")
-  async getMonthlySummary(
-    @Query("userId") userId: string,
-    @Query("month") month: string,
-    @Query("year") year: string
-  ) {
+  async getMonthlySummary(@Query() getMonthlySummaryDto: GetMonthlySummaryDto) {
     return this.statsService.getMonthlySummary(
-      userId,
-      parseInt(month),
-      parseInt(year)
+      getMonthlySummaryDto.userId,
+      getMonthlySummaryDto.month,
+      getMonthlySummaryDto.year
     );
   }
 
   @Get("dashboard")
-  async getDashboardData(@Query("userId") userId: string) {
+  async getDashboardData(@Query() getDashboardDataDto: GetDashboardDataDto) {
     const [weeklyStats, personalRecords, calendarView] = await Promise.all([
-      this.statsService.getWeeklyStats(userId),
-      this.statsService.getPersonalRecords(userId),
-      this.statsService.getCalendarView(userId),
+      this.statsService.getWeeklyStats(getDashboardDataDto.userId),
+      this.statsService.getPersonalRecords(getDashboardDataDto.userId),
+      this.statsService.getCalendarView(getDashboardDataDto.userId),
     ]);
 
     return {

@@ -16,6 +16,7 @@ exports.RunPlansController = void 0;
 const common_1 = require("@nestjs/common");
 const run_plans_service_1 = require("./run-plans.service");
 const nestjs_better_auth_1 = require("@thallesp/nestjs-better-auth");
+const run_plan_dto_1 = require("./dto/run-plan.dto");
 let RunPlansController = class RunPlansController {
     constructor(runPlansService) {
         this.runPlansService = runPlansService;
@@ -47,7 +48,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [run_plan_dto_1.CreateRunPlanDto, Object]),
     __metadata("design:returntype", void 0)
 ], RunPlansController.prototype, "create", null);
 __decorate([
@@ -71,7 +72,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, run_plan_dto_1.UpdateRunPlanDto, Object]),
     __metadata("design:returntype", void 0)
 ], RunPlansController.prototype, "update", null);
 __decorate([
@@ -85,6 +86,7 @@ __decorate([
 exports.RunPlansController = RunPlansController = __decorate([
     (0, common_1.Controller)("run-plans"),
     (0, common_1.UseGuards)(nestjs_better_auth_1.AuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __metadata("design:paramtypes", [run_plans_service_1.RunPlansService])
 ], RunPlansController);
 //# sourceMappingURL=run-plans.controller.js.map

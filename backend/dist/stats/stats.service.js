@@ -23,7 +23,9 @@ let StatsService = class StatsService {
     async getWeeklyStats(userId, weekStart) {
         const today = new Date();
         const startDate = weekStart ?? new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const endDate = weekStart ? new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000) : today;
+        const endDate = weekStart
+            ? new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000)
+            : today;
         const userRuns = await this.runsService.findAll(userId);
         const userGymPlans = await this.gymPlansService.findAll(userId);
         const weeklyRuns = userRuns.filter((run) => run.date >= startDate && run.date <= endDate);
@@ -79,9 +81,12 @@ let StatsService = class StatsService {
             heaviestDeadlift,
         };
     }
-    async getCalendarView(userId, month = new Date().getMonth(), year = new Date().getFullYear()) {
-        const startDate = new Date(year, month, 1);
-        const endDate = new Date(year, month + 1, 0);
+    async getCalendarView(userId, month1Based, year) {
+        const now = new Date();
+        const y = year ?? now.getFullYear();
+        const m = month1Based ? month1Based - 1 : now.getMonth();
+        const startDate = new Date(y, m, 1);
+        const endDate = new Date(y, m + 1, 0);
         const plannedRuns = await this.prisma.runPlan.findMany({
             where: {
                 userId,
@@ -95,13 +100,13 @@ let StatsService = class StatsService {
         const userRuns = await this.runsService.findAll(userId);
         const plannedWorkouts = [
             ...userGymPlans.map((plan) => ({
-                date: new Date(year, month, plan.day),
+                date: new Date(y, m, plan.day),
                 type: "gym",
                 description: `${plan.muscleGroup} Day`,
                 planId: plan.id,
             })),
             ...plannedRuns.map((plan) => ({
-                date: new Date(year, month, plan.day),
+                date: new Date(y, m, plan.day),
                 type: "run",
                 description: `Planned ${plan.type} run`,
                 planId: plan.id,
@@ -109,7 +114,7 @@ let StatsService = class StatsService {
         ];
         const completedWorkouts = [
             ...userRuns
-                .filter((run) => run.date.getMonth() === month && run.date.getFullYear() === year)
+                .filter((run) => run.date.getMonth() === m && run.date.getFullYear() === y)
                 .map((run) => ({
                 date: run.date,
                 type: "run",
@@ -121,10 +126,11 @@ let StatsService = class StatsService {
             ...userGymPlans
                 .filter((plan) => {
                 return plan.exercises.some((exercise) => exercise.completed?.some((completed) => completed.id &&
-                    new Date(completed.createdAt).getMonth() === month));
+                    new Date(completed.createdAt).getMonth() === m &&
+                    new Date(completed.createdAt).getFullYear() === y));
             })
                 .map((plan) => ({
-                date: new Date(year, month, plan.day),
+                date: new Date(y, m, plan.day),
                 type: "gym",
                 description: `${plan.muscleGroup} Day`,
                 completed: true,
@@ -136,8 +142,9 @@ let StatsService = class StatsService {
             completedWorkouts,
         };
     }
-    async getMonthlySummary(userId, month, year) {
-        const userRuns = (await this.runsService.findAll(userId)).filter((run) => run.date.getMonth() === month && run.date.getFullYear() === year);
+    async getMonthlySummary(userId, month1Based, year) {
+        const m = month1Based - 1;
+        const userRuns = (await this.runsService.findAll(userId)).filter((run) => run.date.getMonth() === m && run.date.getFullYear() === year);
         const userGymPlans = await this.gymPlansService.findAll(userId);
         const totalRuns = userRuns.length;
         const totalDistance = userRuns.reduce((sum, run) => sum + run.distance, 0);

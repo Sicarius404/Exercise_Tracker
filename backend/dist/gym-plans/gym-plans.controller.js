@@ -16,6 +16,7 @@ exports.GymPlansController = void 0;
 const common_1 = require("@nestjs/common");
 const gym_plans_service_1 = require("./gym-plans.service");
 const nestjs_better_auth_1 = require("@thallesp/nestjs-better-auth");
+const gym_plan_dto_1 = require("./dto/gym-plan.dto");
 let GymPlansController = class GymPlansController {
     constructor(gymPlansService) {
         this.gymPlansService = gymPlansService;
@@ -54,7 +55,14 @@ let GymPlansController = class GymPlansController {
     }
     completeExercise(exerciseId, completedData, req) {
         const userId = req.user.id;
-        return this.gymPlansService.completeExercise(+exerciseId, userId, completedData);
+        const exerciseData = {
+            actualSets: completedData.actualSets,
+            actualReps: completedData.actualReps,
+            actualWeight: completedData.actualWeight,
+            notes: completedData.notes || null,
+            createdAt: new Date(),
+        };
+        return this.gymPlansService.completeExercise(+exerciseId, userId, exerciseData);
     }
 };
 exports.GymPlansController = GymPlansController;
@@ -63,7 +71,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [gym_plan_dto_1.CreateGymPlanDto, Object]),
     __metadata("design:returntype", void 0)
 ], GymPlansController.prototype, "create", null);
 __decorate([
@@ -87,7 +95,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, gym_plan_dto_1.UpdateGymPlanDto, Object]),
     __metadata("design:returntype", void 0)
 ], GymPlansController.prototype, "update", null);
 __decorate([
@@ -104,7 +112,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, gym_plan_dto_1.ExerciseDto, Object]),
     __metadata("design:returntype", void 0)
 ], GymPlansController.prototype, "addExercise", null);
 __decorate([
@@ -113,7 +121,7 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, gym_plan_dto_1.UpdateExerciseDto, Object]),
     __metadata("design:returntype", void 0)
 ], GymPlansController.prototype, "updateExercise", null);
 __decorate([
@@ -130,12 +138,13 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [String, gym_plan_dto_1.CompleteExerciseDto, Object]),
     __metadata("design:returntype", void 0)
 ], GymPlansController.prototype, "completeExercise", null);
 exports.GymPlansController = GymPlansController = __decorate([
     (0, common_1.Controller)("gym-plans"),
     (0, common_1.UseGuards)(nestjs_better_auth_1.AuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __metadata("design:paramtypes", [gym_plans_service_1.GymPlansService])
 ], GymPlansController);
 //# sourceMappingURL=gym-plans.controller.js.map

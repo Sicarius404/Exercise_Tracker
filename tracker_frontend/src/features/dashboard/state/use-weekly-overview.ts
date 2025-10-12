@@ -24,8 +24,11 @@ type WeeklyOverviewState = {
   setMonth: (month: number, year: number) => void;
 };
 
+const MIN_YEAR = 2010;
+const MAX_YEAR = 2030;
+
 export const useWeeklyOverviewStore = create<WeeklyOverviewState>()(
-  immer((set) => {
+  immer((set, get) => {
     const now = new Date();
     return {
       metrics: null,
@@ -35,40 +38,45 @@ export const useWeeklyOverviewStore = create<WeeklyOverviewState>()(
       currentMonth: now.getMonth(),
       currentYear: now.getFullYear(),
       loadMetrics: async (userId: string, month?: number, year?: number) => {
-        let targetMonth: number;
-        let targetYear: number;
-        
         set((state) => {
           state.isLoading = true;
           state.error = null;
-          targetMonth = month ?? state.currentMonth;
-          targetYear = year ?? state.currentYear;
         });
-        
+
+        const targetMonth = month ?? get().currentMonth;
+        const targetYear = year ?? get().currentYear;
+
+        const safeMonth = Math.min(Math.max(targetMonth, 0), 11);
+        const safeYear = Math.min(Math.max(targetYear, MIN_YEAR), MAX_YEAR);
+
         try {
-          const data = await fetchDashboardData<MonthlyStats>("monthlyStats", { 
+          const data = await fetchDashboardData<MonthlyStats>("monthlyStats", {
             userId,
-            query: { month: targetMonth!, year: targetYear! }
+            query: { month: safeMonth + 1, year: safeYear },
           });
           set((state) => {
             state.metrics = data;
-            state.currentMonth = targetMonth!;
-            state.currentYear = targetYear!;
+            state.currentMonth = safeMonth;
+            state.currentYear = safeYear;
             state.isLoading = false;
             state.hasLoaded = true;
           });
         } catch (err) {
           set((state) => {
             state.error =
-              err instanceof Error ? err.message : "Unable to load monthly stats";
+              err instanceof Error
+                ? err.message
+                : "Unable to load monthly stats";
             state.isLoading = false;
           });
         }
       },
       setMonth: (month: number, year: number) => {
         set((state) => {
-          state.currentMonth = month;
-          state.currentYear = year;
+          const clampedYear = Math.min(Math.max(year, MIN_YEAR), MAX_YEAR);
+          const clampedMonthIndex = Math.min(Math.max(month, 0), 11);
+          state.currentMonth = clampedMonthIndex;
+          state.currentYear = clampedYear;
         });
       },
     };

@@ -1,15 +1,16 @@
 import { StatsService } from "./stats.service";
+import { GetWeeklyStatsDto, GetPersonalRecordsDto, GetCalendarViewDto, GetMonthlySummaryDto, GetDashboardDataDto } from "./dto/stats.dto";
 export declare class StatsController {
     private readonly statsService;
     constructor(statsService: StatsService);
-    getWeeklyStats(userId: string, weekStart?: string): Promise<{
+    getWeeklyStats(getWeeklyStatsDto: GetWeeklyStatsDto): Promise<{
         totalMileage: number;
         averagePace: number;
         totalWeightLifted: number;
         runCount: number;
         completedExercises: number;
     }>;
-    getPersonalRecords(userId: string): Promise<{
+    getPersonalRecords(getPersonalRecordsDto: GetPersonalRecordsDto): Promise<{
         fastest5k: number | null;
         fastest10k: number | null;
         fastestMarathon: number | null;
@@ -17,18 +18,18 @@ export declare class StatsController {
         heaviestBench: number | null;
         heaviestDeadlift: number | null;
     }>;
-    getCalendarView(userId: string, month?: string, year?: string): Promise<{
+    getCalendarView(getCalendarViewDto: GetCalendarViewDto): Promise<{
         plannedWorkouts: any[];
         completedWorkouts: any[];
     }>;
-    getMonthlySummary(userId: string, month: string, year: string): Promise<{
+    getMonthlySummary(getMonthlySummaryDto: GetMonthlySummaryDto): Promise<{
         totalRuns: number;
         totalDistance: number;
         totalGymSessions: number;
         totalWeightLifted: number;
         averagePace: number;
     }>;
-    getDashboardData(userId: string): Promise<{
+    getDashboardData(getDashboardDataDto: GetDashboardDataDto): Promise<{
         weeklyStats: {
             totalMileage: number;
             averagePace: number;

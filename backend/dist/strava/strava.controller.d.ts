@@ -1,4 +1,5 @@
 import { StravaService } from "./strava.service";
+import { ImportRunsDto, SyncRunsDto, GetActivitiesDto, GetAthleteDto, GetConnectionStatusDto } from "./dto/strava.dto";
 interface StravaTokenResponse {
     access_token: string;
     refresh_token: string;
@@ -35,13 +36,7 @@ export declare class StravaController {
         tokenData?: StravaTokenResponse;
         athleteId?: string;
     }>;
-    importRuns(body: {
-        accessToken: string;
-        refreshToken: string;
-        expiresAt: number;
-        userId: string;
-        athleteId: string;
-    }): Promise<{
+    importRuns(importRunsDto: ImportRunsDto): Promise<{
         message: string;
         success: boolean;
         error?: undefined;
@@ -52,14 +47,12 @@ export declare class StravaController {
         message?: undefined;
         success?: undefined;
     }>;
-    getConnectionStatus(userId: string): Promise<{
+    getConnectionStatus(getConnectionStatusDto: GetConnectionStatusDto): Promise<{
         connected: boolean;
         athleteId?: string;
         error?: string;
     }>;
-    syncRuns(body: {
-        userId: string;
-    }): Promise<{
+    syncRuns(syncRunsDto: SyncRunsDto): Promise<{
         message: string;
         success: boolean;
         error?: undefined;
@@ -70,12 +63,12 @@ export declare class StravaController {
         message?: undefined;
         success?: undefined;
     }>;
-    getActivities(accessToken: string, page?: string): Promise<{
+    getActivities(getActivitiesDto: GetActivitiesDto): Promise<{
         activities?: StravaActivity[];
         error?: string;
         details?: string;
     }>;
-    getAthlete(accessToken: string): Promise<{
+    getAthlete(getAthleteDto: GetAthleteDto): Promise<{
         athlete?: any;
         error?: string;
         details?: string;

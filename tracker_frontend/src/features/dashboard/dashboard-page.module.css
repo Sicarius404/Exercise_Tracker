@@ -98,9 +98,9 @@
   color: #475467;
 }
 
-.chartCard {
+.calendarCard {
   grid-column: span 2;
-  background-color: #fef9c3;
+  background-color: #eef2ff;
 }
 
 .chartPlaceholder {
@@ -116,12 +116,8 @@
   letter-spacing: 0.08em;
 }
 
-.calendarCard {
-  background-color: #eef2ff;
-}
-
 @media (max-width: 1024px) {
-  .chartCard {
+  .calendarCard {
     grid-column: span 1;
   }
 }

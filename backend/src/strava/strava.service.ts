@@ -127,8 +127,9 @@ export class StravaService {
       return response.json();
     } catch (error) {
       console.error("Error fetching Strava activities:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       throw new HttpException(
-        `Failed to fetch Strava activities: ${error.message}`,
+        `Failed to fetch Strava activities: ${errorMessage}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -208,8 +209,9 @@ export class StravaService {
       }
     } catch (error) {
       console.error("Error importing Strava activities:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       throw new HttpException(
-        `Failed to import Strava activities: ${error.message}`,
+        `Failed to import Strava activities: ${errorMessage}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }

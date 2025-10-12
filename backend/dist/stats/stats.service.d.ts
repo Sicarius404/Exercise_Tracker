@@ -21,11 +21,11 @@ export declare class StatsService {
         heaviestBench: number | null;
         heaviestDeadlift: number | null;
     }>;
-    getCalendarView(userId: string, month?: number, year?: number): Promise<{
+    getCalendarView(userId: string, month1Based?: number, year?: number): Promise<{
         plannedWorkouts: any[];
         completedWorkouts: any[];
     }>;
-    getMonthlySummary(userId: string, month: number, year: number): Promise<{
+    getMonthlySummary(userId: string, month1Based: number, year: number): Promise<{
         totalRuns: number;
         totalDistance: number;
         totalGymSessions: number;

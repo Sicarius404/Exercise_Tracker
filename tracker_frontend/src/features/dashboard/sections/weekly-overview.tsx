@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { Flame, Footprints, Gauge, MapPinned, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Flame,
+  Footprints,
+  Gauge,
+  MapPinned,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import styles from "../dashboard-page.module.css";
 import DashboardCard from "@/features/dashboard/shared/dashboard-card";
 import { useWeeklyOverviewStore } from "@/features/dashboard/state/use-weekly-overview";
@@ -42,7 +49,7 @@ const HIGHLIGHT_CARDS: Array<{
     formatValue: (value: number) => {
       const minutes = Math.floor(value);
       const seconds = Math.round((value - minutes) * 60);
-      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      return `${minutes}:${seconds.toString().padStart(2, "0")}`;
     },
   },
   {
@@ -64,7 +71,15 @@ const HIGHLIGHT_CARDS: Array<{
 
 export default function WeeklyOverview() {
   const { userId, isLoading: isLoadingUser } = useCurrentUser();
-  const { metrics, isLoading, error, hasLoaded, currentMonth, currentYear, loadMetrics } = useWeeklyOverviewStore();
+  const {
+    metrics,
+    isLoading,
+    error,
+    hasLoaded,
+    currentMonth,
+    currentYear,
+    loadMetrics,
+  } = useWeeklyOverviewStore();
 
   useEffect(() => {
     if (!hasLoaded && !isLoading && !error && userId && !isLoadingUser) {
@@ -82,9 +97,10 @@ export default function WeeklyOverview() {
   const handleNextMonth = () => {
     if (!userId) return;
     const now = new Date();
-    const isCurrentMonth = currentMonth === now.getMonth() && currentYear === now.getFullYear();
+    const isCurrentMonth =
+      currentMonth === now.getMonth() && currentYear === now.getFullYear();
     if (isCurrentMonth) return;
-    
+
     const newMonth = currentMonth === 11 ? 0 : currentMonth + 1;
     const newYear = currentMonth === 11 ? currentYear + 1 : currentYear;
     void loadMetrics(userId, newMonth, newYear);
@@ -92,7 +108,8 @@ export default function WeeklyOverview() {
 
   const monthDate = new Date(currentYear, currentMonth, 1);
   const now = new Date();
-  const isCurrentMonth = currentMonth === now.getMonth() && currentYear === now.getFullYear();
+  const isCurrentMonth =
+    currentMonth === now.getMonth() && currentYear === now.getFullYear();
 
   return (
     <DashboardCard className={`${styles.card} ${styles.chartCard}`}>
@@ -108,7 +125,10 @@ export default function WeeklyOverview() {
               <ChevronLeft className="h-4 w-4 text-slate-600" />
             </button>
             <div className={styles.cardMeta}>
-              {monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              {monthDate.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
             </div>
             <button
               onClick={handleNextMonth}
@@ -137,8 +157,12 @@ export default function WeeklyOverview() {
               {isLoading
                 ? "..."
                 : card.formatValue
-                ? `${card.formatValue(metrics?.[card.key] ?? 0)}${card.suffix ?? ""}`
-                : `${(metrics?.[card.key] ?? 0).toFixed(2)}${card.suffix ?? ""}`}
+                ? `${card.formatValue(metrics?.[card.key] ?? 0)}${
+                    card.suffix ?? ""
+                  }`
+                : `${(metrics?.[card.key] ?? 0).toFixed(2)}${
+                    card.suffix ?? ""
+                  }`}
             </div>
             <div className="mt-1 text-xs font-medium text-slate-500">
               {card.meta}

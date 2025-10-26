@@ -1,5 +1,5 @@
-export declare const auth: import("better-auth/*").Auth<{
-    database: (options: import("better-auth/*").BetterAuthOptions) => import("better-auth/*").Adapter;
+export declare const auth: import("better-auth").Auth<{
+    database: (options: import("better-auth").BetterAuthOptions) => import("@better-auth/core/db/adapter").DBAdapter<import("better-auth").BetterAuthOptions>;
     trustedOrigins: string[];
     basePath: string;
     session: {

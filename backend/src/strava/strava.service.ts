@@ -127,7 +127,8 @@ export class StravaService {
       return response.json();
     } catch (error) {
       console.error("Error fetching Strava activities:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       throw new HttpException(
         `Failed to fetch Strava activities: ${errorMessage}`,
         HttpStatus.INTERNAL_SERVER_ERROR
@@ -195,7 +196,9 @@ export class StravaService {
   ): Promise<void> {
     try {
       const stravaActivities = await this.getActivities(accessToken);
-      const runActivities = stravaActivities.filter(act => act.type === "Run");
+      const runActivities = stravaActivities.filter(
+        (act) => act.type === "Run"
+      );
 
       for (const activity of runActivities) {
         const existingRun = await this.runsService.findByStravaId(
@@ -209,7 +212,8 @@ export class StravaService {
       }
     } catch (error) {
       console.error("Error importing Strava activities:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       throw new HttpException(
         `Failed to import Strava activities: ${errorMessage}`,
         HttpStatus.INTERNAL_SERVER_ERROR

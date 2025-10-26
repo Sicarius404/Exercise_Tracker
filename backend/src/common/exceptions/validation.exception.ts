@@ -19,7 +19,9 @@ export class ResourceNotFoundException extends HttpException {
     super(
       {
         statusCode: HttpStatus.NOT_FOUND,
-        message: `${resource}${identifier ? ` with identifier '${identifier}'` : ""} not found`,
+        message: `${resource}${
+          identifier ? ` with identifier '${identifier}'` : ""
+        } not found`,
         timestamp: new Date().toISOString(),
       },
       HttpStatus.NOT_FOUND
@@ -28,7 +30,7 @@ export class ResourceNotFoundException extends HttpException {
 }
 
 export class UnauthorizedException extends HttpException {
-  constructor(message: string = "Unauthorized access") {
+  constructor(message = "Unauthorized access") {
     super(
       {
         statusCode: HttpStatus.UNAUTHORIZED,
@@ -41,7 +43,7 @@ export class UnauthorizedException extends HttpException {
 }
 
 export class ForbiddenException extends HttpException {
-  constructor(message: string = "Forbidden operation") {
+  constructor(message = "Forbidden operation") {
     super(
       {
         statusCode: HttpStatus.FORBIDDEN,

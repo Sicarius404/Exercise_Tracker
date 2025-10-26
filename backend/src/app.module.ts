@@ -29,6 +29,5 @@ import { DevtoolsModule } from "@nestjs/devtools-integration";
   ],
   controllers: [AppController],
   providers: [AppService],
-
 })
 export class AppModule {}

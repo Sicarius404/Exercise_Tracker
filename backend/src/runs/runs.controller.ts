@@ -22,10 +22,7 @@ export class RunsController {
   constructor(private readonly runsService: RunsService) {}
 
   @Post()
-  async create(
-    @Body() createRunDto: CreateRunDto,
-    @Request() req: any
-  ) {
+  async create(@Body() createRunDto: CreateRunDto, @Request() req: any) {
     const userId = req.user.id;
     const runData = {
       ...createRunDto,
@@ -42,10 +39,7 @@ export class RunsController {
   }
 
   @Get(":id")
-  async findOne(
-    @Param("id") id: string,
-    @Request() req: any
-  ) {
+  async findOne(@Param("id") id: string, @Request() req: any) {
     const userId = req.user.id;
     return this.runsService.findOne(parseInt(id), userId);
   }
@@ -89,18 +83,13 @@ export class RunsController {
   }
 
   @Delete(":id")
-  async remove(
-    @Param("id") id: string,
-    @Request() req: any
-  ) {
+  async remove(@Param("id") id: string, @Request() req: any) {
     const userId = req.user.id;
     return this.runsService.remove(parseInt(id), userId);
   }
 
   @Get("strava/:stravaId")
-  async findByStravaId(
-    @Param("stravaId") stravaId: string
-  ) {
+  async findByStravaId(@Param("stravaId") stravaId: string) {
     return this.runsService.findByStravaId(stravaId);
   }
 }

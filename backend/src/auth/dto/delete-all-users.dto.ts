@@ -4,4 +4,3 @@ export class DeleteAllUsersDto {
   @IsBoolean()
   confirm!: boolean;
 }
-

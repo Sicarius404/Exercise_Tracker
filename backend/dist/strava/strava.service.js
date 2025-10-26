@@ -122,7 +122,7 @@ let StravaService = class StravaService {
     async importStravaActivities(userId, accessToken) {
         try {
             const stravaActivities = await this.getActivities(accessToken);
-            const runActivities = stravaActivities.filter(act => act.type === "Run");
+            const runActivities = stravaActivities.filter((act) => act.type === "Run");
             for (const activity of runActivities) {
                 const existingRun = await this.runsService.findByStravaId(activity.id.toString());
                 if (!existingRun) {

@@ -32,4 +32,3 @@ export class DevAuthController {
     return { deletedUsers };
   }
 }
-

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Query, Body, UsePipes, ValidationPipe } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { StravaService } from "./strava.service";
 import {
   ImportRunsDto,
@@ -163,9 +171,7 @@ export class StravaController {
   }
 
   @Get("activities")
-  async getActivities(
-    @Query() getActivitiesDto: GetActivitiesDto
-  ): Promise<{
+  async getActivities(@Query() getActivitiesDto: GetActivitiesDto): Promise<{
     activities?: StravaActivity[];
     error?: string;
     details?: string;
@@ -187,7 +193,9 @@ export class StravaController {
     @Query() getAthleteDto: GetAthleteDto
   ): Promise<{ athlete?: any; error?: string; details?: string }> {
     try {
-      const athlete = await this.stravaService.getAthlete(getAthleteDto.accessToken);
+      const athlete = await this.stravaService.getAthlete(
+        getAthleteDto.accessToken
+      );
       return { athlete };
     } catch (err: any) {
       return { error: "Failed to fetch athlete data", details: err.message };

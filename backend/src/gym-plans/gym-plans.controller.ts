@@ -28,10 +28,7 @@ export class GymPlansController {
   constructor(private readonly gymPlansService: GymPlansService) {}
 
   @Post()
-  create(
-    @Body() createGymPlanDto: CreateGymPlanDto,
-    @Request() req: any
-  ) {
+  create(@Body() createGymPlanDto: CreateGymPlanDto, @Request() req: any) {
     const userId = req.user.id;
     return this.gymPlansService.create({ ...createGymPlanDto, userId });
   }

@@ -7,9 +7,11 @@ const prisma = new PrismaClient();
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   trustedOrigins: [
-    process.env.FRONTEND_URL ?? "http://localhost:3000",
+    "http://localhost:3000",
     "http://localhost:3001",
-  ],
+    "http://localhost:3002",
+    process.env.FRONTEND_URL,
+  ].filter(Boolean) as string[],
   basePath: "/api/auth",
   session: {
     cookie: {

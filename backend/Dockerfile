@@ -1,35 +1,35 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:20-alpine AS deps
+FROM oven/bun:1-alpine AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json bun.lock ./
+RUN bun install --ci
 
-FROM node:20-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 RUN apk add --no-cache openssl
-COPY package.json package-lock.json nest-cli.json tsconfig*.json ./
+COPY package.json bun.lockb nest-cli.json tsconfig*.json ./
 COPY prisma ./prisma
 COPY src ./src
 
 # Generate Prisma client
-RUN npx prisma generate
+RUN bunx prisma generate
 
 # Build the application
-RUN npm run build
+RUN bun run build
 
-FROM node:20-alpine AS runner
+FROM oven/bun:1-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production \
     PORT=3000
 RUN apk add --no-cache openssl
-COPY package.json package-lock.json ./
+COPY package.json bun.lock ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-RUN npm ci --omit=dev && npm cache clean --force
-RUN npx prisma generate
-RUN chown -R node:node /app
-USER node
+RUN bun install --ci --omit=dev
+RUN bunx prisma generate
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+RUN chown -R nodejs:nodejs /app
+USER nodejs
 EXPOSE 3000
-CMD ["node", "dist/main.js"]
-
+CMD ["bun", "run", "src/main.ts"]

@@ -41,17 +41,17 @@ To build and run the backend:
 
 ```bash
 cd backend
-npm install
-npm run build
-npm run start:prod
+bun install
+bun run build
+bun run start:prod
 ```
 
 To run the backend in development mode:
 
 ```bash
 cd backend
-npm install
-npm run start:dev
+bun install
+bun run start:dev
 ```
 
 To run the backend with Docker:
@@ -66,17 +66,17 @@ To run the frontend in development mode:
 
 ```bash
 cd tracker_frontend
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 To build and run the frontend in production:
 
 ```bash
 cd tracker_frontend
-npm install
-npm run build
-npm run start
+bun install
+bun run build
+bun run start
 ```
 
 ## Mobile App
@@ -95,12 +95,12 @@ Then, follow the instructions in the terminal to run the app on a simulator or a
 
 ## Backend
 
-*   **Linting:** `npm run lint`
-*   **Testing:** `npm run test` (unit tests), `npm run test:e2e` (end-to-end tests)
+*   **Linting:** `bun run lint`
+*   **Testing:** `bun run test` (unit tests), `bun run test:e2e` (end-to-end tests)
 
 ## Frontend
 
-*   **Linting:** `npm run lint`
+*   **Linting:** `bun run lint`
 
 ## Mobile App
 

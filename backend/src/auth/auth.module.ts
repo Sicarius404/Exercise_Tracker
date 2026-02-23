@@ -4,6 +4,13 @@ import { auth } from "./auth";
 import { PrismaModule } from "src/database/prisma.module";
 
 @Module({
-  imports: [BetterAuthModule.forRoot(auth), PrismaModule],
+  imports: [
+    BetterAuthModule.forRootAsync({
+      useFactory: () => ({
+        auth,
+      }),
+    }),
+    PrismaModule,
+  ],
 })
 export class AuthModule {}

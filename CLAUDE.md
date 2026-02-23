@@ -16,24 +16,24 @@ The application allows users to track running workouts (with Strava integration)
 ### Backend (NestJS)
 ```bash
 cd backend
-npm install
-npm run start:dev     # Development with watch mode (port 3001)
-npm run build         # Build for production
-npm run start:prod    # Run production build
-npm run lint          # ESLint
-npm run test          # Unit tests
-npm run test:e2e      # End-to-end tests
-npm run test:cov      # Coverage
+bun install
+bun run start:dev     # Development with watch mode (port 3001)
+bun run build         # Build for production
+bun run start:prod    # Run production build
+bun run lint          # ESLint
+bun run test          # Unit tests
+bun run test:e2e      # End-to-end tests
+bun run test:cov      # Coverage
 ```
 
 ### Frontend (Next.js)
 ```bash
 cd tracker_frontend
-npm install
-npm run dev           # Development with Turbopack (port 3000)
-npm run build         # Production build with Turbopack
-npm run start         # Run production build
-npm run lint          # ESLint
+bun install
+bun run dev           # Development with Turbopack (port 3000)
+bun run build         # Production build with Turbopack
+bun run start         # Run production build
+bun run lint          # ESLint
 ```
 
 ### Mobile App (Expo)
@@ -49,8 +49,8 @@ npm run web           # Run in web browser
 ### Database
 ```bash
 docker-compose up -d postgres    # Start PostgreSQL
-npx prisma migrate dev          # Run migrations
-npx prisma studio               # Database GUI
+bunx prisma migrate dev          # Run migrations
+bunx prisma studio               # Database GUI
 ```
 
 ## Architecture
@@ -104,7 +104,7 @@ Required environment variables:
 
 ## Development Notes
 
-- **Database Changes**: Use Prisma migrations (`npx prisma migrate dev`)
+- **Database Changes**: Use Prisma migrations (`bunx prisma migrate dev`)
 - **Code Style**: Follow existing patterns, use functional components
 - **Testing**: Separate test database for e2e tests
 - **Strava Integration**: OAuth flow requires callback URL configuration
